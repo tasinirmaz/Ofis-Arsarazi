@@ -85,6 +85,25 @@
     .whatsapp-btn:hover {
       background: #1ebe5d;
     }
+
+    /* 📸 Foto Galeri */
+    .gallery {
+      padding: 15px;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 
@@ -94,8 +113,9 @@
 
 <nav>
   <button class="active" onclick="showSection('tur')">360 Sanal Tur</button>
-  <button onclick="showSection('plan')">Plan (2D) / Plan (3D)</button>
+  <button onclick="showSection('plan')">Plan (2D / 3D)</button>
   <button onclick="showSection('bilgi')">Gayrimenkul Bilgileri</button>
+  <button onclick="showSection('galeri')">Foto Galeri</button> <!-- ✅ Yeni sekme -->
 </nav>
 
 <!-- 360 TUR -->
@@ -122,6 +142,19 @@
     <p>📞 Telefon: 0501 262 43 26</p>
     <p>📧 E-Posta: keskinrecep26@gmail.com</p>
     <p>📷 Instagram: @arsarazi (yakında)</p>
+  </div>
+</section>
+
+<!-- 📸 FOTO GALERİ (Yeni oluşturulan bölüm) -->
+<section id="galeri">
+  <div class="gallery">
+    <h2>Foto Galeri</h2>
+    <div class="gallery-grid">
+      <img src="img/foto1.jpg" alt="Foto 1">
+      <img src="img/foto2.jpg" alt="Foto 2">
+      <img src="img/foto3.jpg" alt="Foto 3">
+      <!-- Yeni fotoğraf eklemek için img klasörüne foto at → buraya bir satır daha ekle -->
+    </div>
   </div>
 </section>
 
