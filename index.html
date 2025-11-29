@@ -62,8 +62,63 @@
       overflow-y: auto;
     }
 
-    .info-box h2 {
-      margin-top: 0;
+    /* --- FOTO GALERİ GRID --- */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      padding: 10px;
+      background: white;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    /* --- FULLSCREEN POPUP --- */
+    .popup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 9998;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+    }
+
+    /* Tıklanabilir alanlar */
+    .popup-left,
+    .popup-right {
+      position: absolute;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .popup-left { left: 0; }
+    .popup-right { right: 0; }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      z-index: 9999;
     }
 
     /* WhatsApp Butonu */
@@ -85,25 +140,6 @@
     .whatsapp-btn:hover {
       background: #1ebe5d;
     }
-
-    /* 📸 Foto Galeri */
-    .gallery {
-      padding: 15px;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-    }
-
-    .gallery-grid img {
-      width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
   </style>
 </head>
 
@@ -115,7 +151,7 @@
   <button class="active" onclick="showSection('tur')">360 Sanal Tur</button>
   <button onclick="showSection('plan')">Plan (2D / 3D)</button>
   <button onclick="showSection('bilgi')">Gayrimenkul Bilgileri</button>
-  <button onclick="showSection('galeri')">Foto Galeri</button> <!-- ✅ Yeni sekme -->
+  <button onclick="showSection('foto')">Fotoğraflar</button>
 </nav>
 
 <!-- 360 TUR -->
@@ -123,12 +159,12 @@
   <iframe src="tour/index.html"></iframe>
 </section>
 
-<!-- PLAN (Planner5D gömülü) -->
+<!-- PLAN -->
 <section id="plan">
   <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
-<!-- BİLGİLER -->
+<!-- BİLGİ -->
 <section id="bilgi">
   <div class="info-box">
     <h2>Gayrimenkul Bilgileri</h2>
@@ -145,18 +181,27 @@
   </div>
 </section>
 
-<!-- 📸 FOTO GALERİ (Yeni oluşturulan bölüm) -->
-<section id="galeri">
-  <div class="gallery">
-    <h2>Foto Galeri</h2>
-    <div class="gallery-grid">
-      <img src="img/foto1.jpg" alt="Foto 1">
-      <img src="img/foto2.jpg" alt="Foto 2">
-      <img src="img/foto3.jpg" alt="Foto 3">
-      <!-- Yeni fotoğraf eklemek için img klasörüne foto at → buraya bir satır daha ekle -->
-    </div>
+<!-- FOTOĞRAFLAR -->
+<section id="foto">
+  <div class="photo-grid">
+
+    <!-- ÖRNEK FOTOĞRAFLAR -->
+    <img src="photos/1.jpg" onclick="openPhoto(0)">
+    <img src="photos/2.jpg" onclick="openPhoto(1)">
+    <img src="photos/3.jpg" onclick="openPhoto(2)">
+    <img src="photos/4.jpg" onclick="openPhoto(3)">
+    <img src="photos/5.jpg" onclick="openPhoto(4)">
+
   </div>
 </section>
+
+<!-- FULLSCREEN POPUP -->
+<div id="popup" class="popup">
+  <span class="close-btn" onclick="closePhoto()">×</span>
+  <div class="popup-left" onclick="prevPhoto()"></div>
+  <img id="popupImage">
+  <div class="popup-right" onclick="nextPhoto()"></div>
+</div>
 
 <!-- WhatsApp Sabit Buton -->
 <a href="https://wa.me/905012624326" target="_blank" class="whatsapp-btn">
@@ -169,6 +214,37 @@ function showSection(id) {
   document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
   document.querySelector(`nav button[onclick*='${id}']`).classList.add("active");
   document.getElementById(id).classList.add("active");
+}
+
+/* --- FOTO POPUP KODLARI --- */
+const photos = [
+  "photos/1.jpg",
+  "photos/2.jpg",
+  "photos/3.jpg",
+  "photos/4.jpg",
+  "photos/5.jpg"
+];
+
+let currentIndex = 0;
+
+function openPhoto(i) {
+  currentIndex = i;
+  document.getElementById("popupImage").src = photos[i];
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePhoto() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function nextPhoto() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  document.getElementById("popupImage").src = photos[currentIndex];
+}
+
+function prevPhoto() {
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  document.getElementById("popupImage").src = photos[currentIndex];
 }
 </script>
 
