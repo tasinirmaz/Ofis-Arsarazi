@@ -1,279 +1,163 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arsarazi Ofisi</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsarazi | Portföy</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f4f4;
+        }
 
-    header {
-      background: #1a1a1a;
-      color: white;
-      padding: 15px 20px;
-      font-size: 20px;
-    }
+        /* Sekme menüsü */
+        .tabs {
+            display: flex;
+            background: #222;
+            color: white;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #444;
+        }
 
-    nav {
-      display: flex;
-      background: #eaeaea;
-      border-bottom: 1px solid #ccc;
-    }
+        .content {
+            display: none;
+            padding: 20px;
+        }
+        .content.active {
+            display: block;
+        }
 
-    nav button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: #eaeaea;
-      cursor: pointer;
-      font-size: 15px;
-    }
+        /* Fotoğraf galerisi */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            cursor: pointer;
+            border-radius: 8px;
+        }
 
-    nav button.active {
-      background: white;
-      border-bottom: 3px solid #1a1a1a;
-      font-weight: bold;
-    }
-
-    section {
-      display: none;
-      height: calc(100vh - 120px);
-    }
-
-    section.active {
-      display: block;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .info-box {
-      padding: 20px;
-      background: white;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    /* --- FOTO GALERİ GRID --- */
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 10px;
-      padding: 10px;
-      background: white;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .photo-grid img {
-      width: 100%;
-      height: 110px;
-      object-fit: cover;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-
-    /* --- FULLSCREEN POPUP --- */
-    .popup {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 9998;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .popup img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 8px;
-    }
-
-    /* Tıklanabilir alanlar */
-    .popup-left,
-    .popup-right {
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .popup-left { left: 0; }
-    .popup-right { right: 0; }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 40px;
-      color: white;
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    /* WhatsApp Butonu */
-    .whatsapp-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #25D366;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 50px;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      z-index: 9999;
-    }
-
-    .whatsapp-btn:hover {
-      background: #1ebe5d;
-    }
-  </style>
+        /* Büyük fotoğraf görüntüleme */
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('home')">Anasayfa</div>
+        <div class="tab" onclick="showTab('planner')">3D Plan (Planner5D)</div>
+        <div class="tab" onclick="showTab('tour360')">360 Fotoğraflar</div>
+        <div class="tab" onclick="showTab('photos')">Fotoğraf Galerisi</div>
+    </div>
 
-<header>🏠 Arsarazi Ofisi</header>
+    <!-- ANA SAYFA -->
+    <div id="home" class="content active">
+        <h2>Arsarazi Portföy Sitesi</h2>
+        <p>Hoş geldiniz!</p>
+    </div>
 
-<nav>
-  <button class="active" onclick="showSection('tur')">360 Sanal Tur</button>
-  <button onclick="showSection('plan')">Plan (2D / 3D)</button>
-  <button onclick="showSection('bilgi')">Gayrimenkul Bilgileri</button>
-  <button onclick="showSection('foto')">Fotoğraflar</button>
-</nav>
+    <!-- 3D PLAN -->
+    <div id="planner" class="content">
+        <h2>3D Plan</h2>
+        <iframe src="https://planner5d.com/view?key=363d694337b847a9d4dfc16c23874411" width="100%" height="600" style="border:0"></iframe>
+    </div>
 
-<!-- 360 TUR -->
-<section id="tur" class="active">
-  <iframe src="tour/index.html"></iframe>
-</section>
+    <!-- 360 TURLAR -->
+    <div id="tour360" class="content">
+        <h2>360 Sanal Tur</h2>
+        <iframe src="tour360/index.html" width="100%" height="600" style="border:0"></iframe>
+    </div>
 
-<!-- PLAN -->
-<section id="plan">
-  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
-</section>
+    <!-- FOTOĞRAF GALERİSİ -->
+    <div id="photos" class="content">
+        <h2>Fotoğraflar</h2>
+        <div class="gallery" id="gallery"></div>
+    </div>
 
-<!-- BİLGİ -->
-<section id="bilgi">
-  <div class="info-box">
-    <h2>Gayrimenkul Bilgileri</h2>
-    <p><strong>İlan Sahibi:</strong> Arsarazi</p>
-    <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
-    <p><strong>Oda Sayısı:</strong> 3+1</p>
-    <p><strong>Metrekare:</strong> 120 m²</p>
-    <p><strong>Kat:</strong> 2</p>
+    <!-- FOTOĞRAF BÜYÜTME EKRANI -->
+    <div id="lightbox" onclick="navigate(event)">
+        <img id="lightbox-img" src="" />
+    </div>
 
-    <h3>İletişim</h3>
-    <p>📞 Telefon: 0501 262 43 26</p>
-    <p>📧 E-Posta: keskinrecep26@gmail.com</p>
-    <p>📷 Instagram: @arsarazi (yakında)</p>
-  </div>
-</section>
+    <script>
+        /* SEKME GEÇİŞLERİ */
+        function showTab(id) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
 
-<!-- FOTOĞRAFLAR -->
-<section id="foto">
-  <div class="photo-grid">
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
 
-    <!-- ÖRNEK FOTOĞRAFLAR -->
-    <img src="photos/1.jpg" onclick="openPhoto(0)">
-    <img src="photos/2.jpg" onclick="openPhoto(1)">
-    <img src="photos/3.jpg" onclick="openPhoto(2)">
-    <img src="photos/4.jpg" onclick="openPhoto(3)">
-    <img src="photos/5.jpg" onclick="openPhoto(4)">
-    <img src="photos/5.jpg" onclick="openPhoto(5)">
-    <img src="photos/5.jpg" onclick="openPhoto(6)">
-    <img src="photos/5.jpg" onclick="openPhoto(7)">
-    <img src="photos/5.jpg" onclick="openPhoto(8)">
-    <img src="photos/5.jpg" onclick="openPhoto(9)">
-    <img src="photos/5.jpg" onclick="openPhoto(10)">
-    <img src="photos/5.jpg" onclick="openPhoto(11)">
-    <img src="photos/5.jpg" onclick="openPhoto(12)">
-    <img src="photos/5.jpg" onclick="openPhoto(13)">
-    <img src="photos/5.jpg" onclick="openPhoto(14)">
-    <img src="photos/5.jpg" onclick="openPhoto(15)">
-    <img src="photos/5.jpg" onclick="openPhoto(16)">
-    <img src="photos/5.jpg" onclick="openPhoto(17)">
-    <img src="photos/5.jpg" onclick="openPhoto(18)">
+        /* --- FOTOĞRAF GALERİSİ OTOMATİK YÜKLEME --- */
+        const gallery = document.getElementById("gallery");
+        let photos = [];
+        const maxPhotos = 200; // 200'e kadar fotoğraf destekler
 
-  </div>
-</section>
+        for (let i = 1; i <= maxPhotos; i++) {
+            const img = new Image();
+            img.src = `photos/${i}.jpg`;
+            img.onload = () => {
+                photos.push(img.src);
+                renderGallery();
+            };
+        }
 
-<!-- FULLSCREEN POPUP -->
-<div id="popup" class="popup">
-  <span class="close-btn" onclick="closePhoto()">×</span>
-  <div class="popup-left" onclick="prevPhoto()"></div>
-  <img id="popupImage">
-  <div class="popup-right" onclick="nextPhoto()"></div>
-</div>
+        function renderGallery() {
+            gallery.innerHTML = "";
+            photos.forEach((src, index) => {
+                const img = document.createElement("img");
+                img.src = src;
+                img.onclick = () => openLightbox(index);
+                gallery.appendChild(img);
+            });
+        }
 
-<!-- WhatsApp Sabit Buton -->
-<a href="https://wa.me/905012624326" target="_blank" class="whatsapp-btn">
-  💬 WhatsApp İletişim
-</a>
+        /* --- BÜYÜK FOTOĞRAF GÖSTERME --- */
+        let currentIndex = 0;
 
-<script>
-function showSection(id) {
-  document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
-  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
-  document.querySelector(`nav button[onclick*='${id}']`).classList.add("active");
-  document.getElementById(id).classList.add("active");
-}
+        function openLightbox(index) {
+            currentIndex = index;
+            document.getElementById("lightbox-img").src = photos[index];
+            document.getElementById("lightbox").style.display = "flex";
+        }
 
-/* --- FOTO POPUP KODLARI --- */
-const photos = [
-  "photos/1.jpg",
-  "photos/2.jpg",
-  "photos/3.jpg",
-  "photos/4.jpg",
-  "photos/5.jpg",
-  "photos/6.jpg",
-  "photos/7.jpg",
-  "photos/8.jpg",
-  "photos/9.jpg",
-  "photos/10.jpg",
-  "photos/11.jpg",
-  "photos/12.jpg",
-  "photos/13.jpg",
-  "photos/14.jpg",
-  "photos/15.jpg",
-  "photos/16.jpg",
-  "photos/17.jpg",
-  "photos/18.jpg"
-];
+        function navigate(e) {
+            const x = e.clientX;
+            const mid = window.innerWidth / 2;
 
-let currentIndex = 0;
-
-function openPhoto(i) {
-  currentIndex = i;
-  document.getElementById("popupImage").src = photos[i];
-  document.getElementById("popup").style.display = "flex";
-}
-
-function closePhoto() {
-  document.getElementById("popup").style.display = "none";
-}
-
-function nextPhoto() {
-  currentIndex = (currentIndex + 1) % photos.length;
-  document.getElementById("popupImage").src = photos[currentIndex];
-}
-
-function prevPhoto() {
-  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-  document.getElementById("popupImage").src = photos[currentIndex];
-}
-</script>
-
+            if (x > mid) {
+                // sağ - sonraki
+                currentIndex = (currentIndex + 1) % photos.length;
+            } else {
+                // sol - önceki
+                currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            }
+            document.getElementById("lightbox-img").src = photos[currentIndex];
+        }
+    </script>
 </body>
 </html>
