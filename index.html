@@ -1,279 +1,390 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arsarazi Ofisi</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>taşınIRmaz - İlan</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+    :root{
+      --dark:#1a1a1a;
+      --muted:#eaeaea;
+      --accent:#FF7A00;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, Arial, Helvetica, sans-serif;
+      background:#f5f5f5;
+      color:#222;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
     }
 
-    header {
-      background: #1a1a1a;
-      color: white;
-      padding: 15px 20px;
-      font-size: 20px;
+    header{
+      background:var(--dark);
+      color:#fff;
+      padding:14px 18px;
+      font-size:18px;
+      flex-shrink:0;
     }
 
-    nav {
-      display: flex;
-      background: #eaeaea;
-      border-bottom: 1px solid #ccc;
+    /* nav */
+    .tabs{
+      display:flex;
+      gap:0;
+      background:var(--muted);
+      border-bottom:1px solid #dcdcdc;
+      flex-shrink:0;
+      overflow:auto;
+    }
+    .tabs button{
+      flex:1 0 auto;
+      padding:12px 14px;
+      border:0;
+      background:transparent;
+      font-size:15px;
+      cursor:pointer;
+    }
+    .tabs button.active{
+      background:#fff;
+      border-bottom:3px solid var(--dark);
+      font-weight:600;
     }
 
-    nav button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      background: #eaeaea;
-      cursor: pointer;
-      font-size: 15px;
+    /* main stage */
+    .stage{
+      flex:1;
+      min-height:0; /* allow inner scroll */
+      position:relative;
+      display:flex;
+      flex-direction:column;
     }
 
-    nav button.active {
-      background: white;
-      border-bottom: 3px solid #1a1a1a;
-      font-weight: bold;
+    .panel{
+      display:none;
+      height:100%;
+    }
+    .panel.active{ display:block; }
+
+    iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      display:block;
     }
 
-    section {
-      display: none;
-      height: calc(100vh - 120px);
+    /* info panel */
+    .info {
+      padding:20px;
+      background:#fff;
+      height:100%;
+      overflow:auto;
+    }
+    .info h2{margin-top:0}
+
+    /* gallery */
+    .gallery-wrap{
+      height:100%;
+      overflow:auto;
+      padding:12px;
+      background:#fff;
+    }
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+      gap:10px;
+    }
+    .gallery-grid img{
+      width:100%;
+      height:110px;
+      object-fit:cover;
+      border-radius:8px;
+      cursor:pointer;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+      transition:transform .15s;
+    }
+    .gallery-grid img:hover{ transform:scale(1.03); }
+
+    /* lightbox (overlay) */
+    .lightbox{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.92);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+    }
+    .lightbox img{
+      max-width:92%;
+      max-height:92%;
+      border-radius:8px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    }
+    .lightbox .nav-left,
+    .lightbox .nav-right{
+      position:absolute;
+      top:0;
+      height:100%;
+      width:30%;
+      cursor:pointer;
+    }
+    .lightbox .nav-left{ left:0; }
+    .lightbox .nav-right{ right:0; }
+
+    .lightbox .close-btn{
+      position:absolute;
+      top:18px;
+      right:24px;
+      color:white;
+      font-size:30px;
+      cursor:pointer;
+      z-index:10000;
     }
 
-    section.active {
-      display: block;
+    .lightbox .counter{
+      position:absolute;
+      bottom:20px;
+      left:50%;
+      transform:translateX(-50%);
+      color:#fff;
+      font-size:14px;
+      background:rgba(0,0,0,0.45);
+      padding:6px 10px;
+      border-radius:20px;
     }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+    /* whatsapp */
+    .whatsapp{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      z-index:10001;
+      background:#25D366;
+      color:white;
+      padding:12px 16px;
+      border-radius:50px;
+      text-decoration:none;
+      font-weight:600;
+      box-shadow:0 6px 18px rgba(0,0,0,0.18);
     }
 
-    .info-box {
-      padding: 20px;
-      background: white;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    /* --- FOTO GALERİ GRID --- */
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 10px;
-      padding: 10px;
-      background: white;
-      height: 100%;
-      overflow-y: auto;
-    }
-
-    .photo-grid img {
-      width: 100%;
-      height: 110px;
-      object-fit: cover;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-
-    /* --- FULLSCREEN POPUP --- */
-    .popup {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 9998;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .popup img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 8px;
-    }
-
-    /* Tıklanabilir alanlar */
-    .popup-left,
-    .popup-right {
-      position: absolute;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    .popup-left { left: 0; }
-    .popup-right { right: 0; }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      font-size: 40px;
-      color: white;
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    /* WhatsApp Butonu */
-    .whatsapp-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #25D366;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 50px;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      z-index: 9999;
-    }
-
-    .whatsapp-btn:hover {
-      background: #1ebe5d;
+    /* responsive small */
+    @media (max-width:700px){
+      .gallery-grid img{ height:90px; }
+      .tabs button{ font-size:14px; padding:10px; }
     }
   </style>
 </head>
-
 <body>
 
-<header>🏠 Arsarazi Ofisi</header>
+<header>🏠 taşınIRmaz – İlan</header>
 
-<nav>
-  <button class="active" onclick="showSection('tur')">360 Sanal Tur</button>
-  <button onclick="showSection('plan')">Plan (2D / 3D)</button>
-  <button onclick="showSection('bilgi')">Gayrimenkul Bilgileri</button>
-  <button onclick="showSection('foto')">Fotoğraflar</button>
+<nav class="tabs" role="tablist" aria-label="İçerik sekmeleri">
+  <button data-target="home" class="active" aria-pressed="true">Ana Sayfa</button>
+  <button data-target="planner">Plan (2D / 3D)</button>
+  <button data-target="tour">360 Sanal Tur</button>
+  <button data-target="info">Bilgiler</button>
+  <button data-target="gallery">Fotoğraf Galerisi</button>
 </nav>
 
-<!-- 360 TUR -->
-<section id="tur" class="active">
-  <iframe src="tour/index.html"></iframe>
-</section>
+<main class="stage">
+  <!-- HOME -->
+  <section id="home" class="panel active" role="region" aria-label="Ana Sayfa">
+    <div style="padding:20px;">
+      <h2>taşınIRmaz</h2>
+      <p>Balıkesir ve ilçelerinde daire & işyeri için profesyonel 360° sanal tur ve plan entegrasyonu.</p>
+      <p>Projeyi görüntülemek için üst sekmelerden birini seçin.</p>
+    </div>
+  </section>
 
-<!-- PLAN -->
-<section id="plan">
-  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
-</section>
+  <!-- PLANNER (Planner5D embed) -->
+  <section id="planner" class="panel" role="region" aria-label="Plan 3D">
+    <!-- Replace key if needed -->
+    <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e" title="3D Plan (Planner5D)"></iframe>
+  </section>
 
-<!-- BİLGİ -->
-<section id="bilgi">
-  <div class="info-box">
-    <h2>Gayrimenkul Bilgileri</h2>
-    <p><strong>İlan Sahibi:</strong> Arsarazi</p>
-    <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
-    <p><strong>Oda Sayısı:</strong> 3+1</p>
-    <p><strong>Metrekare:</strong> 120 m²</p>
-    <p><strong>Kat:</strong> 2</p>
+  <!-- 360 TOUR -->
+  <section id="tour" class="panel" role="region" aria-label="360 Sanal Tur">
+    <!-- Make sure your marzipano export's index.html is at /tour/index.html -->
+    <iframe src="tour/index.html" title="360 Tur"></iframe>
+  </section>
 
-    <h3>İletişim</h3>
-    <p>📞 Telefon: 0501 262 43 26</p>
-    <p>📧 E-Posta: keskinrecep26@gmail.com</p>
-    <p>📷 Instagram: @arsarazi (yakında)</p>
-  </div>
-</section>
+  <!-- INFO -->
+  <section id="info" class="panel" role="region" aria-label="Bilgiler">
+    <div class="info">
+      <h2>Gayrimenkul Bilgileri</h2>
+      <p><strong>İlan Sahibi:</strong> taşınIRmaz</p>
+      <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
+      <p><strong>Oda Sayısı:</strong> 3+1</p>
+      <p><strong>Metrekare:</strong> 120 m²</p>
+      <p><strong>Kat:</strong> 2</p>
 
-<!-- FOTOĞRAFLAR -->
-<section id="foto">
-  <div class="photo-grid">
+      <h3>Fiyatlandırma</h3>
+      <p>Her daire için sabit hizmet ücreti: <strong>2000 ₺</strong> (KDV hariç veya dahil tercih size kalmıştı).</p>
 
-    <!-- ÖRNEK FOTOĞRAFLAR -->
-    <img src="photos/1.jpg" onclick="openPhoto(0)">
-    <img src="photos/2.jpg" onclick="openPhoto(1)">
-    <img src="photos/3.jpg" onclick="openPhoto(2)">
-    <img src="photos/4.jpg" onclick="openPhoto(3)">
-    <img src="photos/5.jpg" onclick="openPhoto(4)">
-    <img src="photos/5.jpg" onclick="openPhoto(5)">
-    <img src="photos/6.jpg" onclick="openPhoto(6)">
-    <img src="photos/7.jpg" onclick="openPhoto(7)">
-    <img src="photos/8.jpg" onclick="openPhoto(8)">
-    <img src="photos/9.jpg" onclick="openPhoto(9)">
-    <img src="photos/10.jpg" onclick="openPhoto(10)">
-    <img src="photos/11.jpg" onclick="openPhoto(11)">
-    <img src="photos/12.jpg" onclick="openPhoto(12)">
-    <img src="photos/13.jpg" onclick="openPhoto(13)">
-    <img src="photos/14.jpg" onclick="openPhoto(14)">
-    <img src="photos/15.jpg" onclick="openPhoto(15)">
-    <img src="photos/16.jpg" onclick="openPhoto(16)">
-    <img src="photos/17.jpg" onclick="openPhoto(17)">
-    <img src="photos/18.jpg" onclick="openPhoto(18)">
+      <h3>İletişim</h3>
+      <p>📞 0501 262 43 26</p>
+      <p>✉️ keskinrecep26@gmail.com</p>
+      <p>Instagram: @tasinirmaz (yakında)</p>
+    </div>
+  </section>
 
-  </div>
-</section>
+  <!-- GALLERY -->
+  <section id="gallery" class="panel" role="region" aria-label="Fotoğraf Galerisi">
+    <div class="gallery-wrap">
+      <div class="gallery-grid" id="galleryGrid" aria-live="polite">
+        <!-- images loaded by JS -->
+      </div>
+    </div>
+  </section>
+</main>
 
-<!-- FULLSCREEN POPUP -->
-<div id="popup" class="popup">
-  <span class="close-btn" onclick="closePhoto()">×</span>
-  <div class="popup-left" onclick="prevPhoto()"></div>
-  <img id="popupImage">
-  <div class="popup-right" onclick="nextPhoto()"></div>
+<!-- LIGHTBOX overlay -->
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+  <span class="close-btn" id="lbClose" aria-label="Kapat">✕</span>
+  <div class="nav-left" id="lbPrev" aria-hidden="false"></div>
+  <img id="lbImg" src="" alt="Büyütülmüş fotoğraf">
+  <div class="nav-right" id="lbNext" aria-hidden="false"></div>
+  <div class="counter" id="lbCounter">0 / 0</div>
 </div>
 
-<!-- WhatsApp Sabit Buton -->
-<a href="https://wa.me/905012624326" target="_blank" class="whatsapp-btn">
-  💬 WhatsApp İletişim
-</a>
+<!-- WhatsApp -->
+<a class="whatsapp" href="https://wa.me/905012624326" target="_blank" rel="noopener">💬 WhatsApp</a>
 
 <script>
-function showSection(id) {
-  document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
-  document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
-  document.querySelector(`nav button[onclick*='${id}']`).classList.add("active");
-  document.getElementById(id).classList.add("active");
+/* ---------- TAB LOGIC (stable) ---------- */
+const tabs = document.querySelectorAll('.tabs button');
+const panels = document.querySelectorAll('.panel');
+
+tabs.forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const target = btn.getAttribute('data-target');
+    // deactivate all
+    tabs.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+    panels.forEach(p=>p.classList.remove('active'));
+    // activate clicked
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed','true');
+    document.getElementById(target).classList.add('active');
+  });
+});
+
+/* ---------- GALLERY: auto-detect photos in /photos/ ---------- */
+const galleryGrid = document.getElementById('galleryGrid');
+let photos = []; // array of URLs
+const MAX_PHOTOS = 300; // try up to this many (safe upper bound)
+
+async function tryFetch(url){
+  try{
+    const r = await fetch(url, {method:'HEAD'}); // HEAD is enough to check existence
+    return r.ok;
+  }catch(e){ return false; }
 }
 
-/* --- FOTO POPUP KODLARI --- */
-const photos = [
-  "photos/1.jpg",
-  "photos/2.jpg",
-  "photos/3.jpg",
-  "photos/4.jpg",
-  "photos/5.jpg",
-  "photos/6.jpg",
-  "photos/7.jpg",
-  "photos/8.jpg",
-  "photos/9.jpg",
-  "photos/10.jpg",
-  "photos/11.jpg",
-  "photos/12.jpg",
-  "photos/13.jpg",
-  "photos/14.jpg",
-  "photos/15.jpg",
-  "photos/16.jpg",
-  "photos/17.jpg",
-  "photos/18.jpg"
-];
+async function loadGallery(){
+  // Try numeric filenames 1..MAX_PHOTOS with common extensions
+  const exts = ['jpg','jpeg','png','webp'];
+  for(let i=1;i<=MAX_PHOTOS;i++){
+    let found = false;
+    for(const ext of exts){
+      const url = `photos/${i}.${ext}`;
+      // Use HEAD to avoid downloading full file for check (some hosts may not allow HEAD; fallback to GET)
+      const ok = await tryFetch(url);
+      if(ok){
+        photos.push(url);
+        found = true;
+        break;
+      }
+    }
+    // small optimization: if no file for many consecutive indices, you might break early
+    // but we'll scan full range to be robust
+  }
+  renderGallery();
+}
 
+function renderGallery(){
+  galleryGrid.innerHTML = '';
+  if(photos.length===0){
+    galleryGrid.innerHTML = '<p style="padding:10px;color:#666">Henüz fotoğraf yok. photos klasörüne 1.jpg, 2.jpg ... şeklinde ekleyin.</p>';
+    return;
+  }
+  photos.forEach((src, idx)=>{
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = `Fotoğraf ${idx+1}`;
+    img.loading = 'lazy';
+    img.addEventListener('click', ()=> openLightbox(idx));
+    galleryGrid.appendChild(img);
+  });
+}
+
+/* --- LIGHTBOX with nav & keyboard --- */
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCounter = document.getElementById('lbCounter');
 let currentIndex = 0;
 
-function openPhoto(i) {
-  currentIndex = i;
-  document.getElementById("popupImage").src = photos[i];
-  document.getElementById("popup").style.display = "flex";
+function openLightbox(index){
+  if(photos.length===0) return;
+  currentIndex = index;
+  lbImg.src = photos[currentIndex];
+  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
+  lightbox.style.display = 'flex';
+  lightbox.setAttribute('aria-hidden','false');
+  // prevent background scroll
+  document.body.style.overflow = 'hidden';
 }
 
-function closePhoto() {
-  document.getElementById("popup").style.display = "none";
+function closeLightbox(){
+  lightbox.style.display = 'none';
+  lightbox.setAttribute('aria-hidden','true');
+  lbImg.src = '';
+  document.body.style.overflow = '';
 }
 
-function nextPhoto() {
-  currentIndex = (currentIndex + 1) % photos.length;
-  document.getElementById("popupImage").src = photos[currentIndex];
+function nextPhoto(){
+  if(photos.length===0) return;
+  currentIndex = (currentIndex+1) % photos.length;
+  lbImg.src = photos[currentIndex];
+  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
 }
 
-function prevPhoto() {
-  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-  document.getElementById("popupImage").src = photos[currentIndex];
+function prevPhoto(){
+  if(photos.length===0) return;
+  currentIndex = (currentIndex-1 + photos.length) % photos.length;
+  lbImg.src = photos[currentIndex];
+  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
 }
+
+/* click zones */
+document.getElementById('lbNext').addEventListener('click', (e)=>{ e.stopPropagation(); nextPhoto(); });
+document.getElementById('lbPrev').addEventListener('click', (e)=>{ e.stopPropagation(); prevPhoto(); });
+document.getElementById('lbClose').addEventListener('click', (e)=>{ e.stopPropagation(); closeLightbox(); });
+
+/* click outside image closes (but clicking left/right handled above) */
+lightbox.addEventListener('click', (e)=>{
+  // if clicked directly on image, ignore
+  if(e.target === lbImg) return;
+  closeLightbox();
+});
+
+/* keyboard support */
+document.addEventListener('keydown', (e)=>{
+  if(lightbox.style.display === 'flex'){
+    if(e.key === 'ArrowRight') nextPhoto();
+    if(e.key === 'ArrowLeft') prevPhoto();
+    if(e.key === 'Escape') closeLightbox();
+  }
+});
+
+/* initial load */
+loadGallery();
+
+/* Accessibility: announce when gallery loads (optional) */
+// you can focus first image programmatically if needed
+
 </script>
-
 </body>
 </html>
