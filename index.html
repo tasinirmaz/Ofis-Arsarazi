@@ -1,388 +1,163 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>taşınIRmaz - İlan</title>
-  <style>
-    :root{
-      --dark:#1a1a1a;
-      --muted:#eaeaea;
-      --accent:#FF7A00;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Inter, Arial, Helvetica, sans-serif;
-      background:#f5f5f5;
-      color:#222;
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arsarazi | Portföy</title>
 
-    header{
-      background:var(--dark);
-      color:#fff;
-      padding:14px 18px;
-      font-size:18px;
-      flex-shrink:0;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f4f4;
+        }
 
-    /* nav */
-    .tabs{
-      display:flex;
-      gap:0;
-      background:var(--muted);
-      border-bottom:1px solid #dcdcdc;
-      flex-shrink:0;
-      overflow:auto;
-    }
-    .tabs button{
-      flex:1 0 auto;
-      padding:12px 14px;
-      border:0;
-      background:transparent;
-      font-size:15px;
-      cursor:pointer;
-    }
-    .tabs button.active{
-      background:#fff;
-      border-bottom:3px solid var(--dark);
-      font-weight:600;
-    }
+        /* Sekme menüsü */
+        .tabs {
+            display: flex;
+            background: #222;
+            color: white;
+        }
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: #444;
+        }
 
-    /* main stage */
-    .stage{
-      flex:1;
-      min-height:0; /* allow inner scroll */
-      position:relative;
-      display:flex;
-      flex-direction:column;
-    }
+        .content {
+            display: none;
+            padding: 20px;
+        }
+        .content.active {
+            display: block;
+        }
 
-    .panel{
-      display:none;
-      height:100%;
-    }
-    .panel.active{ display:block; }
+        /* Fotoğraf galerisi */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            cursor: pointer;
+            border-radius: 8px;
+        }
 
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      display:block;
-    }
-
-    /* info panel */
-    .info {
-      padding:20px;
-      background:#fff;
-      height:100%;
-      overflow:auto;
-    }
-    .info h2{margin-top:0}
-
-    /* gallery */
-    .gallery-wrap{
-      height:100%;
-      overflow:auto;
-      padding:12px;
-      background:#fff;
-    }
-    .gallery-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
-      gap:10px;
-    }
-    .gallery-grid img{
-      width:100%;
-      height:110px;
-      object-fit:cover;
-      border-radius:8px;
-      cursor:pointer;
-      box-shadow:0 2px 6px rgba(0,0,0,0.08);
-      transition:transform .15s;
-    }
-    .gallery-grid img:hover{ transform:scale(1.03); }
-
-    /* lightbox (overlay) */
-    .lightbox{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.92);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:9999;
-    }
-    .lightbox img{
-      max-width:92%;
-      max-height:92%;
-      border-radius:8px;
-      box-shadow:0 10px 40px rgba(0,0,0,0.6);
-    }
-    .lightbox .nav-left,
-    .lightbox .nav-right{
-      position:absolute;
-      top:0;
-      height:100%;
-      width:30%;
-      cursor:pointer;
-    }
-    .lightbox .nav-left{ left:0; }
-    .lightbox .nav-right{ right:0; }
-
-    .lightbox .close-btn{
-      position:absolute;
-      top:18px;
-      right:24px;
-      color:white;
-      font-size:30px;
-      cursor:pointer;
-      z-index:10000;
-    }
-
-    .lightbox .counter{
-      position:absolute;
-      bottom:20px;
-      left:50%;
-      transform:translateX(-50%);
-      color:#fff;
-      font-size:14px;
-      background:rgba(0,0,0,0.45);
-      padding:6px 10px;
-      border-radius:20px;
-    }
-
-    /* whatsapp */
-    .whatsapp{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      z-index:10001;
-      background:#25D366;
-      color:white;
-      padding:12px 16px;
-      border-radius:50px;
-      text-decoration:none;
-      font-weight:600;
-      box-shadow:0 6px 18px rgba(0,0,0,0.18);
-    }
-
-    /* responsive small */
-    @media (max-width:700px){
-      .gallery-grid img{ height:90px; }
-      .tabs button{ font-size:14px; padding:10px; }
-    }
-  </style>
+        /* Büyük fotoğraf görüntüleme */
+        #lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+    </style>
 </head>
+
 <body>
-
-<header>🏠 taşınIRmaz – İlan</header>
-
-<nav class="tabs" role="tablist" aria-label="İçerik sekmeleri">
-  <button data-target="home" class="active" aria-pressed="true">Ana Sayfa</button>
-  <button data-target="planner">Plan (2D / 3D)</button>
-  <button data-target="tour">360 Sanal Tur</button>
-  <button data-target="info">Bilgiler</button>
-  <button data-target="gallery">Fotoğraf Galerisi</button>
-</nav>
-
-<main class="stage">
-  <!-- HOME -->
-  <section id="home" class="panel active" role="region" aria-label="Ana Sayfa">
-    <div style="padding:20px;">
-      <h2>taşınIRmaz</h2>
-      <p>Balıkesir ve ilçelerinde daire & işyeri için profesyonel 360° sanal tur ve plan entegrasyonu.</p>
-      <p>Projeyi görüntülemek için üst sekmelerden birini seçin.</p>
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('home')">Anasayfa</div>
+        <div class="tab" onclick="showTab('planner')">3D Plan (Planner5D)</div>
+        <div class="tab" onclick="showTab('tour360')">360 Fotoğraflar</div>
+        <div class="tab" onclick="showTab('photos')">Fotoğraf Galerisi</div>
     </div>
-  </section>
 
-  <!-- PLANNER (Planner5D embed) -->
-  <section id="planner" class="panel" role="region" aria-label="Plan 3D">
-    <!-- Replace key if needed -->
-    <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e" title="3D Plan (Planner5D)"></iframe>
-  </section>
-
-  <!-- 360 TOUR -->
-  <section id="tour" class="panel" role="region" aria-label="360 Sanal Tur">
-    <!-- Make sure your marzipano export's index.html is at /tour/index.html -->
-    <iframe src="tour/index.html" title="360 Tur"></iframe>
-  </section>
-
-  <!-- INFO -->
-  <section id="info" class="panel" role="region" aria-label="Bilgiler">
-    <div class="info">
-      <h2>Gayrimenkul Bilgileri</h2>
-      <p><strong>İlan Sahibi:</strong> taşınIRmaz</p>
-      <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
-      <p><strong>Oda Sayısı:</strong> 3+1</p>
-      <p><strong>Metrekare:</strong> 120 m²</p>
-      <p><strong>Kat:</strong> 2</p>
-
-
-      <h3>İletişim</h3>
-      <p>📞 0501 262 43 26</p>
-      <p>✉️ keskinrecep26@gmail.com</p>
-      <p>Instagram: @tasinirmaz (yakında)</p>
+    <!-- ANA SAYFA -->
+    <div id="home" class="content active">
+        <h2>Arsarazi Portföy Sitesi</h2>
+        <p>Hoş geldiniz!</p>
     </div>
-  </section>
 
-  <!-- GALLERY -->
-  <section id="gallery" class="panel" role="region" aria-label="Fotoğraf Galerisi">
-    <div class="gallery-wrap">
-      <div class="gallery-grid" id="galleryGrid" aria-live="polite">
-        <!-- images loaded by JS -->
-      </div>
+    <!-- 3D PLAN -->
+    <div id="planner" class="content">
+        <h2>3D Plan</h2>
+        <iframe src="https://planner5d.com/view?key=363d694337b847a9d4dfc16c23874411" width="100%" height="600" style="border:0"></iframe>
     </div>
-  </section>
-</main>
 
-<!-- LIGHTBOX overlay -->
-<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
-  <span class="close-btn" id="lbClose" aria-label="Kapat">✕</span>
-  <div class="nav-left" id="lbPrev" aria-hidden="false"></div>
-  <img id="lbImg" src="" alt="Büyütülmüş fotoğraf">
-  <div class="nav-right" id="lbNext" aria-hidden="false"></div>
-  <div class="counter" id="lbCounter">0 / 0</div>
-</div>
+    <!-- 360 TURLAR -->
+    <div id="tour360" class="content">
+        <h2>360 Sanal Tur</h2>
+        <iframe src="tour360/index.html" width="100%" height="600" style="border:0"></iframe>
+    </div>
 
-<!-- WhatsApp -->
-<a class="whatsapp" href="https://wa.me/905012624326" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <!-- FOTOĞRAF GALERİSİ -->
+    <div id="photos" class="content">
+        <h2>Fotoğraflar</h2>
+        <div class="gallery" id="gallery"></div>
+    </div>
 
-<script>
-/* ---------- TAB LOGIC (stable) ---------- */
-const tabs = document.querySelectorAll('.tabs button');
-const panels = document.querySelectorAll('.panel');
+    <!-- FOTOĞRAF BÜYÜTME EKRANI -->
+    <div id="lightbox" onclick="navigate(event)">
+        <img id="lightbox-img" src="" />
+    </div>
 
-tabs.forEach(btn=>{
-  btn.addEventListener('click', e=>{
-    const target = btn.getAttribute('data-target');
-    // deactivate all
-    tabs.forEach(b=>{ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
-    panels.forEach(p=>p.classList.remove('active'));
-    // activate clicked
-    btn.classList.add('active');
-    btn.setAttribute('aria-pressed','true');
-    document.getElementById(target).classList.add('active');
-  });
-});
+    <script>
+        /* SEKME GEÇİŞLERİ */
+        function showTab(id) {
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
 
-/* ---------- GALLERY: auto-detect photos in /photos/ ---------- */
-const galleryGrid = document.getElementById('galleryGrid');
-let photos = []; // array of URLs
-const MAX_PHOTOS = 300; // try up to this many (safe upper bound)
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
 
-async function tryFetch(url){
-  try{
-    const r = await fetch(url, {method:'HEAD'}); // HEAD is enough to check existence
-    return r.ok;
-  }catch(e){ return false; }
-}
+        /* --- FOTOĞRAF GALERİSİ OTOMATİK YÜKLEME --- */
+        const gallery = document.getElementById("gallery");
+        let photos = [];
+        const maxPhotos = 200; // 200'e kadar fotoğraf destekler
 
-async function loadGallery(){
-  // Try numeric filenames 1..MAX_PHOTOS with common extensions
-  const exts = ['jpg','jpeg','png','webp'];
-  for(let i=1;i<=MAX_PHOTOS;i++){
-    let found = false;
-    for(const ext of exts){
-      const url = `photos/${i}.${ext}`;
-      // Use HEAD to avoid downloading full file for check (some hosts may not allow HEAD; fallback to GET)
-      const ok = await tryFetch(url);
-      if(ok){
-        photos.push(url);
-        found = true;
-        break;
-      }
-    }
-    // small optimization: if no file for many consecutive indices, you might break early
-    // but we'll scan full range to be robust
-  }
-  renderGallery();
-}
+        for (let i = 1; i <= maxPhotos; i++) {
+            const img = new Image();
+            img.src = `photos/${i}.jpg`;
+            img.onload = () => {
+                photos.push(img.src);
+                renderGallery();
+            };
+        }
 
-function renderGallery(){
-  galleryGrid.innerHTML = '';
-  if(photos.length===0){
-    galleryGrid.innerHTML = '<p style="padding:10px;color:#666">Henüz fotoğraf yok. photos klasörüne 1.jpg, 2.jpg ... şeklinde ekleyin.</p>';
-    return;
-  }
-  photos.forEach((src, idx)=>{
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = `Fotoğraf ${idx+1}`;
-    img.loading = 'lazy';
-    img.addEventListener('click', ()=> openLightbox(idx));
-    galleryGrid.appendChild(img);
-  });
-}
+        function renderGallery() {
+            gallery.innerHTML = "";
+            photos.forEach((src, index) => {
+                const img = document.createElement("img");
+                img.src = src;
+                img.onclick = () => openLightbox(index);
+                gallery.appendChild(img);
+            });
+        }
 
-/* --- LIGHTBOX with nav & keyboard --- */
-const lightbox = document.getElementById('lightbox');
-const lbImg = document.getElementById('lbImg');
-const lbCounter = document.getElementById('lbCounter');
-let currentIndex = 0;
+        /* --- BÜYÜK FOTOĞRAF GÖSTERME --- */
+        let currentIndex = 0;
 
-function openLightbox(index){
-  if(photos.length===0) return;
-  currentIndex = index;
-  lbImg.src = photos[currentIndex];
-  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
-  lightbox.style.display = 'flex';
-  lightbox.setAttribute('aria-hidden','false');
-  // prevent background scroll
-  document.body.style.overflow = 'hidden';
-}
+        function openLightbox(index) {
+            currentIndex = index;
+            document.getElementById("lightbox-img").src = photos[index];
+            document.getElementById("lightbox").style.display = "flex";
+        }
 
-function closeLightbox(){
-  lightbox.style.display = 'none';
-  lightbox.setAttribute('aria-hidden','true');
-  lbImg.src = '';
-  document.body.style.overflow = '';
-}
+        function navigate(e) {
+            const x = e.clientX;
+            const mid = window.innerWidth / 2;
 
-function nextPhoto(){
-  if(photos.length===0) return;
-  currentIndex = (currentIndex+1) % photos.length;
-  lbImg.src = photos[currentIndex];
-  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
-}
-
-function prevPhoto(){
-  if(photos.length===0) return;
-  currentIndex = (currentIndex-1 + photos.length) % photos.length;
-  lbImg.src = photos[currentIndex];
-  lbCounter.textContent = `${currentIndex+1} / ${photos.length}`;
-}
-
-/* click zones */
-document.getElementById('lbNext').addEventListener('click', (e)=>{ e.stopPropagation(); nextPhoto(); });
-document.getElementById('lbPrev').addEventListener('click', (e)=>{ e.stopPropagation(); prevPhoto(); });
-document.getElementById('lbClose').addEventListener('click', (e)=>{ e.stopPropagation(); closeLightbox(); });
-
-/* click outside image closes (but clicking left/right handled above) */
-lightbox.addEventListener('click', (e)=>{
-  // if clicked directly on image, ignore
-  if(e.target === lbImg) return;
-  closeLightbox();
-});
-
-/* keyboard support */
-document.addEventListener('keydown', (e)=>{
-  if(lightbox.style.display === 'flex'){
-    if(e.key === 'ArrowRight') nextPhoto();
-    if(e.key === 'ArrowLeft') prevPhoto();
-    if(e.key === 'Escape') closeLightbox();
-  }
-});
-
-/* initial load */
-loadGallery();
-
-/* Accessibility: announce when gallery loads (optional) */
-// you can focus first image programmatically if needed
-
-</script>
+            if (x > mid) {
+                // sağ - sonraki
+                currentIndex = (currentIndex + 1) % photos.length;
+            } else {
+                // sol - önceki
+                currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            }
+            document.getElementById("lightbox-img").src = photos[currentIndex];
+        }
+    </script>
 </body>
 </html>
