@@ -2,140 +2,140 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ZOOM KİLİDİ -->
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Arsarazi Ofisi</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f5f5f5;
 }
 
 /* HEADER */
-header {
-  background: #1a1a1a;
-  color: white;
-  padding: 15px;
-  font-size: 20px;
+header{
+  background:#1a1a1a;
+  color:#fff;
+  padding:15px;
+  font-size:20px;
 }
 
 /* NAV */
-nav {
-  display: flex;
-  background: #eaeaea;
-  border-bottom: 1px solid #ccc;
+nav{
+  display:flex;
+  background:#eaeaea;
+  border-bottom:1px solid #ccc;
 }
-
-nav button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  background: #eaeaea;
-  cursor: pointer;
+nav button{
+  flex:1;
+  padding:12px;
+  border:none;
+  background:#eaeaea;
+  cursor:pointer;
 }
-
-nav button.active {
-  background: white;
-  border-bottom: 3px solid #1a1a1a;
-  font-weight: bold;
+nav button.active{
+  background:#fff;
+  border-bottom:3px solid #1a1a1a;
+  font-weight:bold;
 }
 
 /* SECTIONS */
-section {
-  display: none;
-  height: calc(100vh - 115px);
+section{
+  display:none;
+  height:calc(100vh - 115px);
 }
+section.active{ display:block; }
 
-section.active {
-  display: block;
-}
-
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
 }
 
 /* INFO */
-.info-box {
-  background: white;
-  padding: 20px;
-  height: 100%;
-  overflow-y: auto;
+.info-box{
+  background:#fff;
+  padding:20px;
+  height:100%;
+  overflow-y:auto;
 }
 
 /* GALLERY */
-#galeri {
-  background: white;
-  padding: 10px;
-  overflow-y: auto;
+#galeri{
+  background:#fff;
+  padding:10px;
+  overflow-y:auto;
 }
-
-.gallery-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
+.gallery-container{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;
 }
-
-.gallery-container img {
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
+.gallery-container img{
+  width:100%;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
 }
-
-.gallery-container img:hover {
-  transform: scale(1.05);
+.gallery-container img:hover{
+  transform:scale(1.05);
 }
 
 /* LIGHTBOX */
-.lightbox {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.92);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+.lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  touch-action:pan-y;
+  overscroll-behavior:contain;
 }
-
-.lightbox img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
+.lightbox img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+  user-select:none;
+  -webkit-user-drag:none;
+  touch-action:pan-y;
 }
 
 /* CLOSE */
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 32px;
-  color: white;
-  cursor: pointer;
+.close-btn{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:32px;
+  color:white;
+  cursor:pointer;
 }
 
 /* COUNTER */
-.counter {
-  position: absolute;
-  bottom: 20px;
-  color: white;
-  font-size: 14px;
-  opacity: 0.9;
+.counter{
+  position:absolute;
+  bottom:20px;
+  color:white;
+  font-size:14px;
+  opacity:.9;
 }
 
 /* WHATSAPP */
-.whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
-  color: white;
-  padding: 14px 18px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-weight: bold;
+.whatsapp-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:white;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -189,9 +189,9 @@ iframe {
 </a>
 
 <script>
-function showSection(id) {
-  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+function showSection(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
   document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
   document.getElementById(id).classList.add("active");
 }
@@ -201,16 +201,15 @@ const gallery = document.querySelector(".gallery-container");
 let photos = [];
 let currentIndex = 0;
 
-for (let i = 1; i <= 50; i++) {
+for(let i=1;i<=50;i++){
   const img = new Image();
   img.src = `photos/${i}.jpg`;
-
-  img.onload = () => {
+  img.onload = ()=>{
     photos.push(img.src);
-    const thumb = document.createElement("img");
-    thumb.src = img.src;
-    thumb.onclick = () => openLightbox(photos.indexOf(img.src));
-    gallery.appendChild(thumb);
+    const t = document.createElement("img");
+    t.src = img.src;
+    t.onclick = ()=>openLightbox(photos.indexOf(img.src));
+    gallery.appendChild(t);
   };
 }
 
@@ -219,51 +218,49 @@ const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 const counter = document.getElementById("counter");
 
-function updateCounter() {
-  counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+function updateCounter(){
+  counter.textContent = `${currentIndex+1} / ${photos.length}`;
 }
 
-function openLightbox(index) {
-  currentIndex = index;
-  lightboxImg.src = photos[currentIndex];
+function openLightbox(i){
+  currentIndex=i;
+  lightboxImg.src=photos[currentIndex];
   updateCounter();
-  lightbox.style.display = "flex";
+  lightbox.style.display="flex";
 }
 
-function closeLightbox() {
-  lightbox.style.display = "none";
+function closeLightbox(){
+  lightbox.style.display="none";
 }
 
-function nextPhoto() {
-  currentIndex = (currentIndex + 1) % photos.length;
-  lightboxImg.src = photos[currentIndex];
-  updateCounter();
-}
+/* SWIPE — SADECE TEK PARMAK */
+let startX=0;
+let singleTouch=false;
 
-function prevPhoto() {
-  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
-  lightboxImg.src = photos[currentIndex];
-  updateCounter();
-}
-
-/* SWIPE */
-let startX = 0;
-
-lightbox.addEventListener("touchstart", e => {
-  startX = e.changedTouches[0].screenX;
+lightbox.addEventListener("touchstart",e=>{
+  if(e.touches.length===1){
+    startX=e.touches[0].screenX;
+    singleTouch=true;
+  }else{
+    singleTouch=false;
+  }
 });
 
-lightbox.addEventListener("touchend", e => {
-  let endX = e.changedTouches[0].screenX;
-  let diff = startX - endX;
-  if (Math.abs(diff) > 50) {
-    diff > 0 ? nextPhoto() : prevPhoto();
+lightbox.addEventListener("touchend",e=>{
+  if(!singleTouch) return;
+  let diff=startX-e.changedTouches[0].screenX;
+  if(Math.abs(diff)>60){
+    currentIndex = diff>0
+      ? (currentIndex+1)%photos.length
+      : (currentIndex-1+photos.length)%photos.length;
+    lightboxImg.src=photos[currentIndex];
+    updateCounter();
   }
 });
 
 /* ESC */
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") closeLightbox();
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeLightbox();
 });
 </script>
 
