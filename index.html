@@ -100,6 +100,17 @@ iframe {
   z-index: 9999;
 }
 
+/* CLOSE BUTTON */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+}
+
 .lightbox img {
   max-width: 90%;
   max-height: 90%;
@@ -144,17 +155,14 @@ iframe {
   <button data-target="galeri" onclick="showSection('galeri')">Galeri</button>
 </nav>
 
-<!-- 360 TUR -->
 <section id="tur" class="active">
   <iframe src="tour/index.html"></iframe>
 </section>
 
-<!-- PLAN -->
 <section id="plan">
   <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
-<!-- INFO -->
 <section id="bilgi">
   <div class="info-box">
     <h2>Gayrimenkul Bilgileri</h2>
@@ -169,13 +177,13 @@ iframe {
   </div>
 </section>
 
-<!-- GALERİ -->
 <section id="galeri">
   <div class="gallery-container"></div>
 </section>
 
 <!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
+  <div class="close-btn" onclick="closeLightbox()">✕</div>
   <div class="nav-left" onclick="prevPhoto()"></div>
   <img id="lightbox-img">
   <div class="nav-right" onclick="nextPhoto()"></div>
@@ -218,6 +226,10 @@ function openLightbox(index) {
   lightbox.style.display = "flex";
 }
 
+function closeLightbox() {
+  lightbox.style.display = "none";
+}
+
 function nextPhoto() {
   currentIndex = (currentIndex + 1) % photos.length;
   lightboxImg.src = photos[currentIndex];
@@ -228,12 +240,8 @@ function prevPhoto() {
   lightboxImg.src = photos[currentIndex];
 }
 
-lightbox.addEventListener("click", e => {
-  if (e.target === lightbox) lightbox.style.display = "none";
-});
-
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape") lightbox.style.display = "none";
+  if (e.key === "Escape") closeLightbox();
 });
 </script>
 
