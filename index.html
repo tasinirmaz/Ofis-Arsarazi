@@ -94,13 +94,28 @@ iframe {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.92);
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
 
-/* CLOSE BUTTON */
+/* IMAGE */
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  transition: transform 0.3s;
+  cursor: zoom-in;
+}
+
+/* ZOOM */
+.lightbox img.zoomed {
+  transform: scale(2);
+  cursor: zoom-out;
+}
+
+/* CLOSE */
 .close-btn {
   position: absolute;
   top: 15px;
@@ -108,22 +123,23 @@ iframe {
   font-size: 32px;
   color: white;
   cursor: pointer;
-  z-index: 10000;
 }
 
-.lightbox img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
+/* COUNTER */
+.counter {
+  position: absolute;
+  bottom: 20px;
+  color: white;
+  font-size: 14px;
+  opacity: 0.9;
 }
 
-/* NAV AREAS */
+/* CLICK AREAS */
 .nav-left, .nav-right {
   position: absolute;
   top: 0;
   width: 50%;
   height: 100%;
-  cursor: pointer;
 }
 
 .nav-left { left: 0; }
@@ -187,6 +203,7 @@ iframe {
   <div class="nav-left" onclick="prevPhoto()"></div>
   <img id="lightbox-img">
   <div class="nav-right" onclick="nextPhoto()"></div>
+  <div id="counter" class="counter"></div>
 </div>
 
 <a class="whatsapp-btn" href="https://wa.me/905012624326" target="_blank">
@@ -219,10 +236,17 @@ for (let i = 1; i <= 50; i++) {
 /* LIGHTBOX */
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
+const counter = document.getElementById("counter");
+
+function updateCounter() {
+  counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+}
 
 function openLightbox(index) {
   currentIndex = index;
   lightboxImg.src = photos[currentIndex];
+  lightboxImg.classList.remove("zoomed");
+  updateCounter();
   lightbox.style.display = "flex";
 }
 
@@ -233,12 +257,35 @@ function closeLightbox() {
 function nextPhoto() {
   currentIndex = (currentIndex + 1) % photos.length;
   lightboxImg.src = photos[currentIndex];
+  lightboxImg.classList.remove("zoomed");
+  updateCounter();
 }
 
 function prevPhoto() {
   currentIndex = (currentIndex - 1 + photos.length) % photos.length;
   lightboxImg.src = photos[currentIndex];
+  lightboxImg.classList.remove("zoomed");
+  updateCounter();
 }
+
+/* ZOOM */
+lightboxImg.addEventListener("dblclick", () => {
+  lightboxImg.classList.toggle("zoomed");
+});
+
+/* SWIPE */
+let startX = 0;
+lightbox.addEventListener("touchstart", e => {
+  startX = e.changedTouches[0].screenX;
+});
+
+lightbox.addEventListener("touchend", e => {
+  let endX = e.changedTouches[0].screenX;
+  let diff = startX - endX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? nextPhoto() : prevPhoto();
+  }
+});
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeLightbox();
