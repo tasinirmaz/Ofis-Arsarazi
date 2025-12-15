@@ -95,6 +95,7 @@ iframe{
   align-items:center;
   z-index:9999;
   touch-action:pan-y;
+  overscroll-behavior:contain;
 }
 .lightbox img{
   max-width:90%;
@@ -102,6 +103,7 @@ iframe{
   border-radius:10px;
   user-select:none;
   -webkit-user-drag:none;
+  touch-action:pan-y;
 }
 
 /* CLOSE */
@@ -120,6 +122,7 @@ iframe{
   bottom:20px;
   color:white;
   font-size:14px;
+  opacity:.9;
 }
 
 /* WHATSAPP */
@@ -142,18 +145,18 @@ iframe{
 <header>🏠 Arsarazi Ofisi</header>
 
 <nav>
-  <button class="active" onclick="showSection('tur')">360 Tur</button>
-  <button onclick="showSection('plan')">Plan</button>
-  <button onclick="showSection('bilgi')">Bilgiler</button>
-  <button onclick="showSection('galeri')">Galeri</button>
+  <button class="active" data-target="tur" onclick="showSection('tur')">360 Tur</button>
+  <button data-target="plan" onclick="showSection('plan')">Plan</button>
+  <button data-target="bilgi" onclick="showSection('bilgi')">Bilgiler</button>
+  <button data-target="galeri" onclick="showSection('galeri')">Galeri</button>
 </nav>
 
 <section id="tur" class="active">
-  <iframe src="tour/index.html" loading="lazy"></iframe>
+  <iframe src="tour/index.html"></iframe>
 </section>
 
 <section id="plan">
-  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e" loading="lazy"></iframe>
+  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
 <section id="bilgi">
@@ -163,6 +166,10 @@ iframe{
     <p><b>Konum:</b> Balıkesir / Paşaalanı</p>
     <p><b>Oda:</b> 3+1</p>
     <p><b>Alan:</b> 120 m²</p>
+
+    <h3>İletişim</h3>
+    <p>📞 0501 262 43 26</p>
+    <p>📧 keskinrecep26@gmail.com</p>
   </div>
 </section>
 
@@ -173,7 +180,7 @@ iframe{
 <!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
   <div class="close-btn" onclick="closeLightbox()">✕</div>
-  <img id="lightbox-img" decoding="async">
+  <img id="lightbox-img">
   <div id="counter" class="counter"></div>
 </div>
 
@@ -185,28 +192,22 @@ iframe{
 function showSection(id){
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll("nav button").forEach(b=>{
-    if(b.textContent.toLowerCase().includes(id)) b.classList.add("active");
-  });
+  document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
   document.getElementById(id).classList.add("active");
 }
 
-/* GALERİ — WEBP + LAZY */
+/* GALERİ */
 const gallery = document.querySelector(".gallery-container");
 let photos = [];
 let currentIndex = 0;
 
 for(let i=1;i<=50;i++){
   const img = new Image();
-  img.src = `photos/${i}.webp`;
-
+  img.src = `photos/${i}.jpg`;
   img.onload = ()=>{
     photos.push(img.src);
-
     const t = document.createElement("img");
     t.src = img.src;
-    t.loading = "lazy";
-    t.decoding = "async";
     t.onclick = ()=>openLightbox(photos.indexOf(img.src));
     gallery.appendChild(t);
   };
@@ -221,27 +222,18 @@ function updateCounter(){
   counter.textContent = `${currentIndex+1} / ${photos.length}`;
 }
 
-/* PRELOAD */
-function preloadNext(){
-  if(currentIndex+1 < photos.length){
-    const p = new Image();
-    p.src = photos[currentIndex+1];
-  }
-}
-
 function openLightbox(i){
-  currentIndex = i;
-  lightboxImg.src = photos[currentIndex];
+  currentIndex=i;
+  lightboxImg.src=photos[currentIndex];
   updateCounter();
-  preloadNext();
-  lightbox.style.display = "flex";
+  lightbox.style.display="flex";
 }
 
 function closeLightbox(){
-  lightbox.style.display = "none";
+  lightbox.style.display="none";
 }
 
-/* SWIPE — TEK PARMAK */
+/* SWIPE — SADECE TEK PARMAK */
 let startX=0;
 let singleTouch=false;
 
@@ -263,7 +255,6 @@ lightbox.addEventListener("touchend",e=>{
       : (currentIndex-1+photos.length)%photos.length;
     lightboxImg.src=photos[currentIndex];
     updateCounter();
-    preloadNext();
   }
 });
 
