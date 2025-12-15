@@ -134,17 +134,6 @@ iframe {
   opacity: 0.9;
 }
 
-/* CLICK AREAS */
-.nav-left, .nav-right {
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 100%;
-}
-
-.nav-left { left: 0; }
-.nav-right { right: 0; }
-
 /* WHATSAPP */
 .whatsapp-btn {
   position: fixed;
@@ -200,9 +189,7 @@ iframe {
 <!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
   <div class="close-btn" onclick="closeLightbox()">✕</div>
-  <div class="nav-left" onclick="prevPhoto()"></div>
   <img id="lightbox-img">
-  <div class="nav-right" onclick="nextPhoto()"></div>
   <div id="counter" class="counter"></div>
 </div>
 
@@ -273,8 +260,9 @@ lightboxImg.addEventListener("dblclick", () => {
   lightboxImg.classList.toggle("zoomed");
 });
 
-/* SWIPE */
+/* SWIPE (SADECE MOBİL) */
 let startX = 0;
+
 lightbox.addEventListener("touchstart", e => {
   startX = e.changedTouches[0].screenX;
 });
@@ -287,6 +275,7 @@ lightbox.addEventListener("touchend", e => {
   }
 });
 
+/* ESC */
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") closeLightbox();
 });
