@@ -15,7 +15,7 @@ body {
 /* HEADER */
 header {
   background: #1a1a1a;
-  color: #fff;
+  color: white;
   padding: 15px;
   font-size: 20px;
 }
@@ -33,11 +33,10 @@ nav button {
   border: none;
   background: #eaeaea;
   cursor: pointer;
-  font-size: 14px;
 }
 
 nav button.active {
-  background: #fff;
+  background: white;
   border-bottom: 3px solid #1a1a1a;
   font-weight: bold;
 }
@@ -60,7 +59,7 @@ iframe {
 
 /* INFO */
 .info-box {
-  background: #fff;
+  background: white;
   padding: 20px;
   height: 100%;
   overflow-y: auto;
@@ -68,7 +67,7 @@ iframe {
 
 /* GALLERY */
 #galeri {
-  background: #fff;
+  background: white;
   padding: 10px;
   overflow-y: auto;
 }
@@ -95,7 +94,7 @@ iframe {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.9);
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -106,6 +105,18 @@ iframe {
   max-height: 90%;
   border-radius: 10px;
 }
+
+/* NAV AREAS */
+.nav-left, .nav-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.nav-left { left: 0; }
+.nav-right { right: 0; }
 
 /* WHATSAPP */
 .whatsapp-btn {
@@ -118,7 +129,6 @@ iframe {
   border-radius: 50px;
   text-decoration: none;
   font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 </style>
 </head>
@@ -144,15 +154,14 @@ iframe {
   <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
-<!-- BİLGİ -->
+<!-- INFO -->
 <section id="bilgi">
   <div class="info-box">
     <h2>Gayrimenkul Bilgileri</h2>
-    <p><strong>İlan Sahibi:</strong> Arsarazi</p>
-    <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
-    <p><strong>Oda:</strong> 3+1</p>
-    <p><strong>Alan:</strong> 120 m²</p>
-    <p><strong>Kat:</strong> 2</p>
+    <p><b>İlan Sahibi:</b> Arsarazi</p>
+    <p><b>Konum:</b> Balıkesir / Paşaalanı</p>
+    <p><b>Oda:</b> 3+1</p>
+    <p><b>Alan:</b> 120 m²</p>
 
     <h3>İletişim</h3>
     <p>📞 0501 262 43 26</p>
@@ -167,10 +176,12 @@ iframe {
 
 <!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
+  <div class="nav-left" onclick="prevPhoto()"></div>
   <img id="lightbox-img">
+  <div class="nav-right" onclick="nextPhoto()"></div>
 </div>
 
-<a class="whatsapp-btn" target="_blank" href="https://wa.me/905012624326">
+<a class="whatsapp-btn" href="https://wa.me/905012624326" target="_blank">
   💬 WhatsApp
 </a>
 
@@ -182,29 +193,48 @@ function showSection(id) {
   document.getElementById(id).classList.add("active");
 }
 
-/* GALERİ – FETCH YOK */
+/* GALERİ */
 const gallery = document.querySelector(".gallery-container");
+let photos = [];
+let currentIndex = 0;
 
 for (let i = 1; i <= 50; i++) {
+  const src = `photos/${i}.jpg`;
   const img = document.createElement("img");
-  img.src = `photos/${i}.jpg`;
+  img.src = src;
   img.onerror = () => img.remove();
-  img.onclick = () => openLightbox(img.src);
+  img.onclick = () => openLightbox(i - 1);
   gallery.appendChild(img);
+  photos.push(src);
 }
 
 /* LIGHTBOX */
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 
-function openLightbox(src) {
-  lightboxImg.src = src;
+function openLightbox(index) {
+  currentIndex = index;
+  lightboxImg.src = photos[currentIndex];
   lightbox.style.display = "flex";
 }
 
-lightbox.onclick = () => {
-  lightbox.style.display = "none";
-};
+function nextPhoto() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  lightboxImg.src = photos[currentIndex];
+}
+
+function prevPhoto() {
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  lightboxImg.src = photos[currentIndex];
+}
+
+lightbox.addEventListener("click", e => {
+  if (e.target === lightbox) lightbox.style.display = "none";
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") lightbox.style.display = "none";
+});
 </script>
 
 </body>
