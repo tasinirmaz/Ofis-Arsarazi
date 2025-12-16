@@ -184,34 +184,36 @@ const photos = [];
 
 let index = 1;
 
-function loadNextPhoto(){
-  const thumbSrc = `photos/thumbs/${index}.jpg`;
-  const largeSrc = `photos/large/${index}.jpg`;
+function loadNext() {
+  const thumb = `photos/thumbs/${index}.jpg`;
+  const large = `photos/large/${index}.jpg`;
 
   const img = new Image();
-  img.src = thumbSrc;
+  img.src = thumb;
 
   img.onload = () => {
-    photos.push(largeSrc);
+    const currentIndex = photos.length; // 🔥 SABİT INDEX
+    photos.push(large);
 
     const box = document.createElement("div");
     box.className = "thumb";
 
-    img.onclick = () => openLightbox(photos.length - 1);
+    img.dataset.index = currentIndex;
+    img.onclick = () => openLightbox(currentIndex);
 
     box.appendChild(img);
     gallery.appendChild(box);
 
     index++;
-    loadNextPhoto(); // 🔁 sıradaki foto
+    loadNext();
   };
 
   img.onerror = () => {
-    console.log("Yükleme bitti. Toplam foto:", photos.length);
+    console.log("Galeri yüklendi. Toplam:", photos.length);
   };
 }
 
-loadNextPhoto();
+loadNext();
 
 /* LIGHTBOX */
 let current = 0;
@@ -231,17 +233,18 @@ function closeLightbox(){
 }
 
 /* SWIPE */
-let startX = 0;
-lb.addEventListener("touchstart", e => startX = e.touches[0].screenX);
+let sx = 0;
+lb.addEventListener("touchstart", e => sx = e.touches[0].screenX);
 lb.addEventListener("touchend", e => {
-  const diff = startX - e.changedTouches[0].screenX;
-  if (Math.abs(diff) > 60) {
-    current = diff > 0
+  const d = sx - e.changedTouches[0].screenX;
+  if (Math.abs(d) > 60) {
+    current = d > 0
       ? (current + 1) % photos.length
       : (current - 1 + photos.length) % photos.length;
     openLightbox(current);
   }
 });
+
 </script>
 
 
