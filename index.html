@@ -9,9 +9,18 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
 header{background:#1a1a1a;color:#fff;padding:15px;font-size:20px;}
+
 nav{display:flex;background:#eaeaea;border-bottom:1px solid #ccc;}
-nav button{flex:1;padding:12px;border:none;background:#eaeaea;cursor:pointer;}
-nav button.active{background:#fff;border-bottom:3px solid #1a1a1a;font-weight:bold;}
+nav button{
+  flex:1;padding:12px;border:none;
+  background:#eaeaea;cursor:pointer;
+}
+nav button.active{
+  background:#fff;
+  border-bottom:3px solid #1a1a1a;
+  font-weight:bold;
+}
+
 section{display:none;height:calc(100vh - 115px);}
 section.active{display:block;}
 iframe{width:100%;height:100%;border:none;}
@@ -29,7 +38,6 @@ iframe{width:100%;height:100%;border:none;}
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
   gap:10px;
 }
-
 .thumb{
   width:100%;
   aspect-ratio:4/3;
@@ -38,8 +46,7 @@ iframe{width:100%;height:100%;border:none;}
   overflow:hidden;
 }
 .thumb img{
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   object-fit:cover;
   cursor:pointer;
   opacity:0;
@@ -56,21 +63,32 @@ iframe{width:100%;height:100%;border:none;}
   align-items:center;
   z-index:9999;
 }
-.lightbox img{max-width:90%;max-height:90%;border-radius:10px;}
+.lightbox img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+}
 .close-btn{
-  position:absolute;top:15px;right:20px;
-  font-size:32px;color:white;cursor:pointer;
+  position:absolute;
+  top:15px;right:20px;
+  font-size:32px;
+  color:white;cursor:pointer;
 }
 .counter{
-  position:absolute;bottom:20px;
+  position:absolute;
+  bottom:20px;
   color:white;font-size:14px;
 }
 
 .whatsapp-btn{
-  position:fixed;bottom:20px;right:20px;
-  background:#25D366;color:white;
-  padding:14px 18px;border-radius:50px;
-  text-decoration:none;font-weight:bold;
+  position:fixed;
+  bottom:20px;right:20px;
+  background:#25D366;
+  color:white;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -95,13 +113,35 @@ iframe{width:100%;height:100%;border:none;}
 </section>
 
 <section id="bilgi">
-  <div class="info-box">
-    <h2>İlan Bilgileri</h2>
-    <table class="ilan-table">
-      <tr><td>Emlak Tipi</td><td>Kiralık Daire</td></tr>
-      <tr><td>m² (Net)</td><td>85</td></tr>
-    </table>
-  </div>
+<div class="info-box">
+<h2>İlan Bilgileri</h2>
+
+<table class="ilan-table">
+<tr><td>İlan No</td><td>1288960473</td></tr>
+<tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
+<tr><td>Emlak Tipi</td><td>Kiralık Daire</td></tr>
+<tr><td>m² (Brüt)</td><td>95</td></tr>
+<tr><td>m² (Net)</td><td>85</td></tr>
+<tr><td>Oda Sayısı</td><td>2+1</td></tr>
+<tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
+<tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
+<tr><td>Kat Sayısı</td><td>4</td></tr>
+<tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
+<tr><td>Banyo Sayısı</td><td>1</td></tr>
+<tr><td>Mutfak</td><td>Kapalı</td></tr>
+<tr><td>Balkon</td><td>Var</td></tr>
+<tr><td>Asansör</td><td>Yok</td></tr>
+<tr><td>Otopark</td><td>Açık Otopark</td></tr>
+<tr><td>Eşyalı</td><td>Hayır</td></tr>
+<tr><td>Kullanım Durumu</td><td>Boş</td></tr>
+<tr><td>Site İçerisinde</td><td>Hayır</td></tr>
+<tr><td>Site Adı</td><td>Belirtilmemiş</td></tr>
+<tr><td>Aidat (TL)</td><td>200</td></tr>
+<tr><td>Depozito (TL)</td><td>15.000</td></tr>
+<tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
+<tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
+</table>
+</div>
 </section>
 
 <section id="galeri">
@@ -124,13 +164,12 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* HERO + LAZY GALERİ */
+/* HERO + LAZY + OTOMATİK FOTO */
 const gallery=document.querySelector(".gallery-container");
 const photos=[];
 const MAX_CHECK=30;
 const HERO_COUNT=6;
 
-/* Lazy observer */
 const observer=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
@@ -159,11 +198,9 @@ for(let i=1;i<=MAX_CHECK;i++){
     img.onclick=()=>openLightbox(photos.indexOf(testImg.src));
 
     if(i<=HERO_COUNT){
-      /* HERO FOTO */
       img.src=testImg.src;
       img.onload=()=>box.classList.add("loaded");
     }else{
-      /* LAZY FOTO */
       img.dataset.src=testImg.src;
       observer.observe(box);
     }
@@ -171,10 +208,8 @@ for(let i=1;i<=MAX_CHECK;i++){
     box.appendChild(img);
     gallery.appendChild(box);
   };
-
-  testImg.onerror=()=>{};
 }
-
+  
 /* LIGHTBOX */
 let currentIndex=0;
 const lightbox=document.getElementById("lightbox");
