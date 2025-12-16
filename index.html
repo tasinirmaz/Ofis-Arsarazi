@@ -185,65 +185,110 @@ iframe{width:100%;height:100%;border:none;}
 <a id="whatsappBtn" class="whatsapp-btn" target="_blank"></a>
 
 <script>
-function showSection(id){
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
-  document.getElementById(id).classList.add("active");
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-/* 🎵 Autoplay fix */
-document.body.addEventListener("click",()=>{
-  const m=document.getElementById("bgMusic");
-  if(m.paused) m.play();
-},{once:true});
-
-/* 📲 WhatsApp */
-const mesaj="Merhaba, ilan hakkında bilgi almak istiyorum.";
-document.getElementById("whatsappBtn").href=
-`https://wa.me/905012624326?text=${encodeURIComponent(mesaj)}`;
-
-/* 🖼️ GALERİ – GARANTİLİ */
-document.addEventListener("DOMContentLoaded",()=>{
-
-const gallery=document.querySelector(".gallery-container");
-const photos=[];
-const MAX=30;
-
-for(let i=1;i<=MAX;i++){
-  const imgTest=new Image();
-  imgTest.src=`photos/${i}.jpg`;
-  imgTest.onload=()=>{
-    photos.push(imgTest.src);
-    const box=document.createElement("div");
-    box.className="thumb";
-    const img=document.createElement("img");
-    img.src=imgTest.src;
-    img.onload=()=>box.classList.add("loaded");
-    img.onclick=()=>openLightbox(photos.indexOf(imgTest.src));
-    box.appendChild(img);
-    gallery.appendChild(box);
+  /* 🔀 SEKMELER */
+  window.showSection = function(id){
+    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+    document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
+    document.getElementById(id).classList.add("active");
   };
-}
 
-let current=0;
-window.openLightbox=(i)=>{
-  current=i;
-  document.getElementById("lightbox-img").src=photos[current];
-  document.getElementById("counter").innerText=`${current+1} / ${photos.length}`;
-  document.getElementById("lightbox").style.display="flex";
-}
-window.closeLightbox=()=>{
-  document.getElementById("lightbox").style.display="none";
-}
+  /* 🎵 MÜZİK – KISIK BAŞLAT */
+  const bgMusic = document.getElementById("bgMusic");
+  bgMusic.volume = 0.2;
 
+  document.body.addEventListener("click",()=>{
+    if(bgMusic.paused) bgMusic.play();
+  },{once:true});
 
-const bgMusic = document.getElementById("bgMusic");
-bgMusic.volume = 0.15;
+  /* 📲 WHATSAPP */
+  const ilanAdi = document.getElementById("ilanAdi").innerText;
+  const emlakTipi = document.getElementById("emlakTipi").innerText;
+  const mesaj = `Merhaba, ${ilanAdi} ${emlakTipi} ilanınız ile ilgili bilgi almak istiyorum.`;
+  document.getElementById("whatsappBtn").href =
+    `https://wa.me/905012624326?text=${encodeURIComponent(mesaj)}`;
 
+  /* 🖼️ GALERİ */
+  const gallery = document.querySelector(".gallery-container");
+  const photos = [];
+  const MAX_CHECK = 30;
+  const HERO_COUNT = 6;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const img = e.target.querySelector("img");
+        if (img && img.dataset.src) {
+          img.src = img.dataset.src;
+          img.onload = () => e.target.classList.add("loaded");
+          delete img.dataset.src;
+        }
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  for (let i = 1; i <= MAX_CHECK; i++) {
+    const testImg = new Image();
+    testImg.src = `photos/${i}.jpg`;
+
+    testImg.onload = () => {
+      photos.push(testImg.src);
+
+      const box = document.createElement("div");
+      box.className = "thumb";
+
+      const img = document.createElement("img");
+      img.onclick = () => openLightbox(photos.indexOf(testImg.src));
+
+      if (i <= HERO_COUNT) {
+        img.src = testImg.src;
+        img.onload = () => box.classList.add("loaded");
+      } else {
+        img.dataset.src = testImg.src;
+        observer.observe(box);
+      }
+
+      box.appendChild(img);
+      gallery.appendChild(box);
+    };
+  }
+
+  /* 🔍 LIGHTBOX */
+  let currentIndex = 0;
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const counter = document.getElementById("counter");
+
+  window.openLightbox = function(i){
+    currentIndex = i;
+    lightboxImg.src = photos[currentIndex];
+    counter.textContent = `${currentIndex + 1} / ${photos.length}`;
+    lightbox.style.display = "flex";
+  };
+
+  window.closeLightbox = function(){
+    lightbox.style.display = "none";
+  };
+
+  /* 👉 SWIPE */
+  let startX = 0;
+  lightbox.addEventListener("touchstart", e => startX = e.touches[0].screenX);
+  lightbox.addEventListener("touchend", e => {
+    const diff = startX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 60) {
+      currentIndex = diff > 0
+        ? (currentIndex + 1) % photos.length
+        : (currentIndex - 1 + photos.length) % photos.length;
+      openLightbox(currentIndex);
+    }
+  });
 
 });
 </script>
+
 
 </body>
 </html>
