@@ -2,33 +2,24 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Arsarazi Ofisi</title>
 
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
 header{
-  background:#1a1a1a;
-  color:#fff;
-  padding:15px;
-  font-size:20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+  background:#1a1a1a;color:#fff;padding:15px;
+  font-size:20px;display:flex;
+  align-items:center;justify-content:space-between;
 }
-
 .whatsapp-header{
-  width:28px;
-  height:28px;
-  cursor:pointer;
+  width:28px;height:28px;cursor:pointer;
   animation:pulse 2s infinite;
 }
-
 @keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.15);}
-  100%{transform:scale(1);}
+  0%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+  100%{transform:scale(1)}
 }
 
 nav{display:flex;background:#eaeaea;border-bottom:1px solid #ccc;}
@@ -70,7 +61,6 @@ iframe{width:100%;height:100%;border:none;}
   height:100%;
   object-fit:cover;
   cursor:pointer;
-  transition:.3s;
 }
 
 .lightbox{
@@ -101,8 +91,6 @@ iframe{width:100%;height:100%;border:none;}
   color:white;
   font-size:14px;
 }
-
-.whatsapp-btn{display:none;}
 </style>
 </head>
 
@@ -110,21 +98,24 @@ iframe{width:100%;height:100%;border:none;}
 
 <header>
   <div>🏠 Arsarazi Ofisi</div>
-  <img src="icons/whatsapp.png"
-       class="whatsapp-header"
-       onclick="document.getElementById('whatsappBtn').click()">
+  <img src="icons/whatsapp.png" class="whatsapp-header"
+       onclick="window.open('https://wa.me/905012624326','_blank')">
 </header>
 
 <nav>
-  <button class="active" data-target="tur" onclick="showSection('tur')">360 Fotoğraf</button>
-  <button data-target="galeri" onclick="showSection('galeri')">Galeri</button>
-  <button data-target="plan" onclick="showSection('plan')">Plan</button>
-  <button data-target="bilgi" onclick="showSection('bilgi')">Bilgiler</button>
-  <button data-target="harita" onclick="showSection('harita')">Haritalar</button>
+  <button class="active" onclick="showSection('tur')">360 Fotoğraf</button>
+  <button onclick="showSection('galeri')">Galeri</button>
+  <button onclick="showSection('plan')">Plan</button>
+  <button onclick="showSection('bilgi')">Bilgiler</button>
+  <button onclick="showSection('harita')">Haritalar</button>
 </nav>
 
 <section id="tur" class="active">
   <iframe src="tour/index.html"></iframe>
+</section>
+
+<section id="galeri">
+  <div class="gallery-container" id="gallery"></div>
 </section>
 
 <section id="plan">
@@ -135,107 +126,82 @@ iframe{width:100%;height:100%;border:none;}
 <div class="info-box">
 <h2>İlan Bilgileri</h2>
 <table class="ilan-table">
-<tr><td>İlan Adı</td><td id="ilanAdi">1.Gündoğan Mah. Seyhan Sok. No:4</td></tr>
-<tr><td>Emlak Tipi</td><td id="emlakTipi">Kiralık Daire</td></tr>
-<tr><td>Fiyatı (TL)</td><td>15.000</td></tr>
-<tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
+<tr><td>İlan Adı</td><td>1.Gündoğan Mah. Seyhan Sok. No:4</td></tr>
+<tr><td>Emlak Tipi</td><td>Kiralık Daire</td></tr>
+<tr><td>Fiyat</td><td>15.000 TL</td></tr>
 <tr><td>m² (Brüt)</td><td>95</td></tr>
-<tr><td>m² (Net)</td><td>85</td></tr>
-<tr><td>Oda Sayısı</td><td>2+1</td></tr>
-<tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
-<tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
-<tr><td>Kat Sayısı</td><td>4</td></tr>
-<tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
-<tr><td>Banyo Sayısı</td><td>1</td></tr>
-<tr><td>Mutfak</td><td>Kapalı</td></tr>
-<tr><td>Balkon</td><td>Var</td></tr>
-<tr><td>Asansör</td><td>Yok</td></tr>
-<tr><td>Otopark</td><td>Açık Otopark</td></tr>
-<tr><td>Eşyalı</td><td>Hayır</td></tr>
-<tr><td>Kullanım Durumu</td><td>Boş</td></tr>
-<tr><td>Site İçerisinde</td><td>Hayır</td></tr>
-<tr><td>Site Adı</td><td>Belirtilmemiş</td></tr>
-<tr><td>Aidat (TL)</td><td>200</td></tr>
-<tr><td>Depozito (TL)</td><td>15.000</td></tr>
-<tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
-<tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
+<tr><td>Oda</td><td>2+1</td></tr>
+<tr><td>Isıtma</td><td>Kombi</td></tr>
 </table>
 </div>
 </section>
 
-<section id="galeri">
-  <div class="gallery-container"></div>
+<section id="harita">
+  <iframe src="https://www.google.com/maps?q=Adana&output=embed"></iframe>
 </section>
 
 <div id="lightbox" class="lightbox">
   <div class="close-btn" onclick="closeLightbox()">✕</div>
-  <img id="lightbox-img">
+  <img id="lightboxImg">
   <div id="counter" class="counter"></div>
 </div>
 
-<a id="whatsappBtn" class="whatsapp-btn" target="_blank"></a>
-
 <script>
 function showSection(id){
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
+  event.target.classList.add("active");
 }
 
-/* WhatsApp */
-const mesaj = "Merhaba, ilan hakkında bilgi almak istiyorum.";
-document.getElementById("whatsappBtn").href =
-  "https://wa.me/905012624326?text=" + encodeURIComponent(mesaj);
-
-/* 🖼️ GALERİ – THUMB + LARGE */
-const gallery = document.querySelector(".gallery-container");
-const photos = [];
-const MAX = 30;
-
+/* GALERİ */
+const MAX=30;
+const photos=[];
 for(let i=1;i<=MAX;i++){
-  const thumbSrc = `photos/thumbs/${i}.jpg`;
-  const largeSrc = `photos/large/${i}.jpg`;
+  photos.push({
+    thumb:`photos/thumbs/${i}.jpg`,
+    large:`photos/large/${i}.jpg`
+  });
+}
 
-  const img = new Image();
-  img.src = thumbSrc;
-  img.onerror = ()=>{};
-  img.onload = ()=>{
-    photos.push(largeSrc);
+const gallery=document.getElementById("gallery");
 
-    const box = document.createElement("div");
-    box.className = "thumb";
-
-    img.onclick = ()=>openLightbox(photos.indexOf(largeSrc));
+photos.forEach((p,i)=>{
+  const img=new Image();
+  img.src=p.thumb;
+  img.onload=()=>{
+    const box=document.createElement("div");
+    box.className="thumb";
+    img.onclick=()=>openLightbox(i);
     box.appendChild(img);
     gallery.appendChild(box);
   };
-}
+});
 
 /* LIGHTBOX */
-let currentIndex=0;
-const lightbox=document.getElementById("lightbox");
-const lightboxImg=document.getElementById("lightbox-img");
+let current=0;
+const lb=document.getElementById("lightbox");
+const lbImg=document.getElementById("lightboxImg");
 const counter=document.getElementById("counter");
 
 function openLightbox(i){
-  currentIndex=i;
-  lightboxImg.src=photos[currentIndex];
-  counter.textContent=`${currentIndex+1} / ${photos.length}`;
-  lightbox.style.display="flex";
+  current=i;
+  lbImg.src=photos[current].large;
+  counter.textContent=`${current+1} / ${photos.length}`;
+  lb.style.display="flex";
 }
-function closeLightbox(){lightbox.style.display="none";}
+function closeLightbox(){lb.style.display="none";}
 
 /* SWIPE */
-let startX=0;
-lightbox.addEventListener("touchstart",e=>startX=e.touches[0].screenX);
-lightbox.addEventListener("touchend",e=>{
-  const d=startX-e.changedTouches[0].screenX;
+let sx=0;
+lb.addEventListener("touchstart",e=>sx=e.touches[0].screenX);
+lb.addEventListener("touchend",e=>{
+  let d=sx-e.changedTouches[0].screenX;
   if(Math.abs(d)>60){
-    currentIndex=d>0
-      ?(currentIndex+1)%photos.length
-      :(currentIndex-1+photos.length)%photos.length;
-    openLightbox(currentIndex);
+    current=d>0
+      ?(current+1)%photos.length
+      :(current-1+photos.length)%photos.length;
+    openLightbox(current);
   }
 });
 </script>
