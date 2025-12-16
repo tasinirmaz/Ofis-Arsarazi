@@ -179,30 +179,39 @@ function showSection(id){
 
 /* GALERİ */
 /* 🖼️ GALERİ – SAĞLAM VERSİYON */
-
 const gallery = document.getElementById("gallery");
-const MAX = 30;
+const photos = [];
 
-/* FOTOĞRAF LİSTESİ BAŞTAN SIRALI */
-const photos = Array.from({length: MAX}, (_, i) => 
-  `photos/large/${i+1}.jpg`
-);
+let index = 1;
 
-for (let i = 1; i <= MAX; i++) {
-  const thumb = `photos/thumbs/${i}.jpg`;
+function loadNextPhoto(){
+  const thumbSrc = `photos/thumbs/${index}.jpg`;
+  const largeSrc = `photos/large/${index}.jpg`;
 
   const img = new Image();
-  img.src = thumb;
+  img.src = thumbSrc;
 
   img.onload = () => {
+    photos.push(largeSrc);
+
     const box = document.createElement("div");
     box.className = "thumb";
 
-    img.onclick = () => openLightbox(i - 1); // 🔥 KRİTİK SATIR
+    img.onclick = () => openLightbox(photos.length - 1);
+
     box.appendChild(img);
     gallery.appendChild(box);
+
+    index++;
+    loadNextPhoto(); // 🔁 sıradaki foto
+  };
+
+  img.onerror = () => {
+    console.log("Yükleme bitti. Toplam foto:", photos.length);
   };
 }
+
+loadNextPhoto();
 
 /* LIGHTBOX */
 let current = 0;
@@ -222,18 +231,19 @@ function closeLightbox(){
 }
 
 /* SWIPE */
-let sx = 0;
-lb.addEventListener("touchstart", e => sx = e.touches[0].screenX);
+let startX = 0;
+lb.addEventListener("touchstart", e => startX = e.touches[0].screenX);
 lb.addEventListener("touchend", e => {
-  let d = sx - e.changedTouches[0].screenX;
-  if (Math.abs(d) > 60) {
-    current = d > 0
+  const diff = startX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 60) {
+    current = diff > 0
       ? (current + 1) % photos.length
       : (current - 1 + photos.length) % photos.length;
     openLightbox(current);
   }
 });
 </script>
+
 
 </body>
 </html>
