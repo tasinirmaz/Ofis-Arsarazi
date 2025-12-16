@@ -122,15 +122,29 @@ iframe{width:100%;height:100%;border:none;}
   >
 </header>
 
-<!-- 🔊 ARKA PLAN MÜZİK -->
-<audio id="bgMusic" src="music/bg.mp3" autoplay loop></audio>
 
 <nav>
-  <button class="active" data-target="tur" onclick="showSection('tur')">360 Tur</button>
-  <button data-target="plan" onclick="showSection('plan')">Plan</button>
-  <button data-target="bilgi" onclick="showSection('bilgi')">Bilgiler</button>
-  <button data-target="galeri" onclick="showSection('galeri')">Galeri</button>
+  <button class="active" data-target="tur" onclick="showSection('tur')">
+    360 Fotoğraf
+  </button>
+
+  <button data-target="galeri" onclick="showSection('galeri')">
+    Galeri
+  </button>
+
+  <button data-target="plan" onclick="showSection('plan')">
+    Plan
+  </button>
+
+  <button data-target="bilgi" onclick="showSection('bilgi')">
+    Bilgiler
+  </button>
+
+  <button data-target="harita" onclick="showSection('harita')">
+    Haritalar
+  </button>
 </nav>
+
 
 <section id="tur" class="active">
   <iframe src="tour/index.html"></iframe>
@@ -195,13 +209,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id).classList.add("active");
   };
 
-  /* 🎵 MÜZİK – KISIK BAŞLAT */
-  const bgMusic = document.getElementById("bgMusic");
-  bgMusic.volume = 0.15;
-
-  document.body.addEventListener("click",()=>{
-    if(bgMusic.paused) bgMusic.play();
-  },{once:true});
 
   /* 📲 WHATSAPP */
   const ilanAdi = document.getElementById("ilanAdi").innerText;
