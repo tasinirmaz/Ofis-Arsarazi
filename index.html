@@ -95,6 +95,9 @@ iframe{width:100%;height:100%;border:none;}
 
 <body>
 
+<!-- 🎵 ARKA PLAN MÜZİK -->
+<audio id="bgMusic" src="music/background.mp3" loop></audio>
+
 <header>🏠 Arsarazi Ofisi</header>
 
 <nav>
@@ -118,26 +121,15 @@ iframe{width:100%;height:100%;border:none;}
 
 <table class="ilan-table">
 <tr><td>İlan Adı</td><td id="ilanAdi">1.Gündoğan Mah. Seyhan Sok. No:4</td></tr>
-<tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
 <tr><td>Emlak Tipi</td><td id="emlakTipi">Kiralık Daire</td></tr>
+<tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
 <tr><td>m² (Brüt)</td><td>95</td></tr>
 <tr><td>m² (Net)</td><td>85</td></tr>
 <tr><td>Oda Sayısı</td><td>2+1</td></tr>
-<tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
-<tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
-<tr><td>Kat Sayısı</td><td>4</td></tr>
 <tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
-<tr><td>Banyo Sayısı</td><td>1</td></tr>
-<tr><td>Mutfak</td><td>Kapalı</td></tr>
 <tr><td>Balkon</td><td>Var</td></tr>
-<tr><td>Asansör</td><td>Yok</td></tr>
-<tr><td>Otopark</td><td>Açık Otopark</td></tr>
-<tr><td>Eşyalı</td><td>Hayır</td></tr>
-<tr><td>Kullanım Durumu</td><td>Boş</td></tr>
-<tr><td>Aidat (TL)</td><td>200</td></tr>
-<tr><td>Depozito (TL)</td><td>15.000</td></tr>
-<tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
-<tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
+<tr><td>Aidat</td><td>200 TL</td></tr>
+<tr><td>Depozito</td><td>15.000 TL</td></tr>
 </table>
 </div>
 </section>
@@ -155,6 +147,11 @@ iframe{width:100%;height:100%;border:none;}
 <a id="whatsappBtn" class="whatsapp-btn" target="_blank">💬 WhatsApp</a>
 
 <script>
+/* MÜZİK OTOMATİK */
+const music=document.getElementById("bgMusic");
+document.addEventListener("click",()=>music.play(),{once:true});
+
+/* SEKMELER */
 function showSection(id){
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
@@ -162,16 +159,68 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* WHATSAPP OTOMATİK MESAJ */
+/* WHATSAPP MESAJ */
 const ilanAdi=document.getElementById("ilanAdi").innerText;
 const emlakTipi=document.getElementById("emlakTipi").innerText;
 
-const mesaj=`Merhaba, ${ilanAdi} ${emlakTipi} ilanınız ile ilgili bilgi almak istiyorum.`;
-const whatsappLink=`https://wa.me/905012624326?text=${encodeURIComponent(mesaj)}`;
+const mesaj=`Merhaba,\n${ilanAdi} – ${emlakTipi} ilanınız ile ilgili bilgi almak istiyorum.`;
+document.getElementById("whatsappBtn").href=
+`https://wa.me/905012624326?text=${encodeURIComponent(mesaj)}`;
 
-document.getElementById("whatsappBtn").href=whatsappLink;
+/* GALERİ */
+const gallery=document.querySelector(".gallery-container");
+const photos=[];
+const MAX_CHECK=30;
+const HERO_COUNT=6;
 
-/* GALERİ (SENİN MEVCUT HALİN DEĞİŞMEDİ) */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const img=e.target.querySelector("img");
+      if(img && img.dataset.src){
+        img.src=img.dataset.src;
+        img.onload=()=>e.target.classList.add("loaded");
+        delete img.dataset.src;
+      }
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+
+for(let i=1;i<=MAX_CHECK;i++){
+  const testImg=new Image();
+  testImg.src=`photos/${i}.jpg`;
+  testImg.onload=()=>{
+    photos.push(testImg.src);
+    const box=document.createElement("div");
+    box.className="thumb";
+    const img=document.createElement("img");
+    img.onclick=()=>openLightbox(photos.indexOf(testImg.src));
+    if(i<=HERO_COUNT){
+      img.src=testImg.src;
+      img.onload=()=>box.classList.add("loaded");
+    }else{
+      img.dataset.src=testImg.src;
+      observer.observe(box);
+    }
+    box.appendChild(img);
+    gallery.appendChild(box);
+  };
+}
+
+/* LIGHTBOX */
+let currentIndex=0;
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
+const counter=document.getElementById("counter");
+
+function openLightbox(i){
+  currentIndex=i;
+  lightboxImg.src=photos[currentIndex];
+  counter.textContent=`${currentIndex+1} / ${photos.length}`;
+  lightbox.style.display="flex";
+}
+function closeLightbox(){lightbox.style.display="none";}
 </script>
 
 </body>
