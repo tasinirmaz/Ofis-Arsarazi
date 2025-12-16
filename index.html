@@ -2,79 +2,140 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ZOOM KİLİDİ -->
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Arsarazi Ofisi</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f5f5f5;
 }
 
-header {
-  background: #1a1a1a;
-  color: white;
-  padding: 15px 20px;
-  font-size: 20px;
+/* HEADER */
+header{
+  background:#1a1a1a;
+  color:#fff;
+  padding:15px;
+  font-size:20px;
 }
 
-nav {
-  display: flex;
-  background: #eaeaea;
-  border-bottom: 1px solid #ccc;
+/* NAV */
+nav{
+  display:flex;
+  background:#eaeaea;
+  border-bottom:1px solid #ccc;
+}
+nav button{
+  flex:1;
+  padding:12px;
+  border:none;
+  background:#eaeaea;
+  cursor:pointer;
+}
+nav button.active{
+  background:#fff;
+  border-bottom:3px solid #1a1a1a;
+  font-weight:bold;
 }
 
-nav button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  background: #eaeaea;
-  cursor: pointer;
-  font-size: 15px;
+/* SECTIONS */
+section{
+  display:none;
+  height:calc(100vh - 115px);
+}
+section.active{ display:block; }
+
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
 }
 
-nav button.active {
-  background: white;
-  border-bottom: 3px solid #1a1a1a;
-  font-weight: bold;
+/* INFO */
+.info-box{
+  background:#fff;
+  padding:20px;
+  height:100%;
+  overflow-y:auto;
 }
 
-section {
-  display: none;
-  height: calc(100vh - 120px);
+/* GALLERY */
+#galeri{
+  background:#fff;
+  padding:10px;
+  overflow-y:auto;
+}
+.gallery-container{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:10px;
+}
+.gallery-container img{
+  width:100%;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+.gallery-container img:hover{
+  transform:scale(1.05);
 }
 
-section.active {
-  display: block;
+/* LIGHTBOX */
+.lightbox{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  touch-action:pan-y;
+  overscroll-behavior:contain;
+}
+.lightbox img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:10px;
+  user-select:none;
+  -webkit-user-drag:none;
+  touch-action:pan-y;
 }
 
-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+/* CLOSE */
+.close-btn{
+  position:absolute;
+  top:15px;
+  right:20px;
+  font-size:32px;
+  color:white;
+  cursor:pointer;
 }
 
-.info-box {
-  padding: 20px;
-  background: white;
-  height: 100%;
-  overflow-y: auto;
+/* COUNTER */
+.counter{
+  position:absolute;
+  bottom:20px;
+  color:white;
+  font-size:14px;
+  opacity:.9;
 }
 
-.whatsapp-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
-  color: white;
-  padding: 14px 20px;
-  border-radius: 50px;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  z-index: 9999;
+/* WHATSAPP */
+.whatsapp-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:white;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -84,56 +145,123 @@ iframe {
 <header>🏠 Arsarazi Ofisi</header>
 
 <nav>
-  <button class="active" onclick="showSection('tur')">360 Sanal Tur</button>
-  <button onclick="showSection('plan')">Plan (2D / 3D)</button>
-  <button onclick="showSection('bilgi')">Bilgiler</button>
-  <button onclick="showSection('galeri')">Fotoğraflar</button>
+  <button class="active" data-target="tur" onclick="showSection('tur')">360 Tur</button>
+  <button data-target="plan" onclick="showSection('plan')">Plan</button>
+  <button data-target="bilgi" onclick="showSection('bilgi')">Bilgiler</button>
+  <button data-target="galeri" onclick="showSection('galeri')">Galeri</button>
 </nav>
 
-<!-- 360 TUR -->
 <section id="tur" class="active">
   <iframe src="tour/index.html"></iframe>
 </section>
 
-<!-- PLAN -->
 <section id="plan">
   <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
-<!-- BİLGİLER -->
 <section id="bilgi">
   <div class="info-box">
     <h2>Gayrimenkul Bilgileri</h2>
-    <p><strong>İlan Sahibi:</strong> Arsarazi</p>
-    <p><strong>Konum:</strong> Balıkesir / Paşaalanı</p>
-    <p><strong>Oda Sayısı:</strong> 3+1</p>
-    <p><strong>Metrekare:</strong> 120 m²</p>
-    <p><strong>Kat:</strong> 2</p>
+    <p><b>İlan Sahibi:</b> Arsarazi</p>
+    <p><b>Konum:</b> Balıkesir / Paşaalanı</p>
+    <p><b>Oda:</b> 3+1</p>
+    <p><b>Alan:</b> 120 m²</p>
 
     <h3>İletişim</h3>
-    <p>📞 Telefon: 0501 262 43 26</p>
-    <p>📧 E-Posta: keskinrecep26@gmail.com</p>
-    <p>📷 Instagram: @arsarazi</p>
+    <p>📞 0501 262 43 26</p>
+    <p>📧 keskinrecep26@gmail.com</p>
   </div>
 </section>
 
-<!-- FOTOĞRAFLAR (PHOTO-PICK) -->
 <section id="galeri">
-  <iframe src="https://www.photo-pick.com/online/FWvEp6cL.link"></iframe>
+  <div class="gallery-container"></div>
 </section>
 
-<!-- WhatsApp -->
-<a href="https://wa.me/905012624326" target="_blank" class="whatsapp-btn">
-  💬 WhatsApp İletişim
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <div class="close-btn" onclick="closeLightbox()">✕</div>
+  <img id="lightbox-img">
+  <div id="counter" class="counter"></div>
+</div>
+
+<a class="whatsapp-btn" href="https://wa.me/905012624326" target="_blank">
+  💬 WhatsApp
 </a>
 
 <script>
-function showSection(id) {
-  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  document.querySelector(`nav button[onclick*="${id}"]`).classList.add("active");
+function showSection(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
   document.getElementById(id).classList.add("active");
 }
+
+/* GALERİ */
+const gallery = document.querySelector(".gallery-container");
+let photos = [];
+let currentIndex = 0;
+
+for(let i=1;i<=50;i++){
+  const img = new Image();
+  img.src = `photos/${i}.jpg`;
+  img.onload = ()=>{
+    photos.push(img.src);
+    const t = document.createElement("img");
+    t.src = img.src;
+    t.onclick = ()=>openLightbox(photos.indexOf(img.src));
+    gallery.appendChild(t);
+  };
+}
+
+/* LIGHTBOX */
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const counter = document.getElementById("counter");
+
+function updateCounter(){
+  counter.textContent = `${currentIndex+1} / ${photos.length}`;
+}
+
+function openLightbox(i){
+  currentIndex=i;
+  lightboxImg.src=photos[currentIndex];
+  updateCounter();
+  lightbox.style.display="flex";
+}
+
+function closeLightbox(){
+  lightbox.style.display="none";
+}
+
+/* SWIPE — SADECE TEK PARMAK */
+let startX=0;
+let singleTouch=false;
+
+lightbox.addEventListener("touchstart",e=>{
+  if(e.touches.length===1){
+    startX=e.touches[0].screenX;
+    singleTouch=true;
+  }else{
+    singleTouch=false;
+  }
+});
+
+lightbox.addEventListener("touchend",e=>{
+  if(!singleTouch) return;
+  let diff=startX-e.changedTouches[0].screenX;
+  if(Math.abs(diff)>60){
+    currentIndex = diff>0
+      ? (currentIndex+1)%photos.length
+      : (currentIndex-1+photos.length)%photos.length;
+    lightboxImg.src=photos[currentIndex];
+    updateCounter();
+  }
+});
+
+/* ESC */
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") closeLightbox();
+});
 </script>
 
 </body>
