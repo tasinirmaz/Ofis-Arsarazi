@@ -96,7 +96,15 @@ iframe{width:100%;height:100%;border:none;}
 
 <body>
 
-<header>🏠 Arsarazi Ofisi</header>
+<header style="display:flex;align-items:center;justify-content:space-between;">
+  <div>🏠 Arsarazi Ofisi</div>
+  <img 
+    src="icons/whatsapp.png"
+    style="width:28px;height:28px;cursor:pointer"
+    onclick="document.getElementById('whatsappBtn').click()"
+  >
+</header>
+
 
 <!-- 🔊 ARKA PLAN MÜZİK -->
 <audio id="bgMusic" src="music/bg.mp3" autoplay loop></audio>
