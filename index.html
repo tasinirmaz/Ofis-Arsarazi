@@ -29,6 +29,7 @@ iframe{width:100%;height:100%;border:none;}
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
   gap:10px;
 }
+
 .thumb{
   width:100%;
   aspect-ratio:4/3;
@@ -64,6 +65,7 @@ iframe{width:100%;height:100%;border:none;}
   position:absolute;bottom:20px;
   color:white;font-size:14px;
 }
+
 .whatsapp-btn{
   position:fixed;bottom:20px;right:20px;
   background:#25D366;color:white;
@@ -122,10 +124,26 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* PROFESYONEL GALERİ */
+/* HERO + LAZY GALERİ */
 const gallery=document.querySelector(".gallery-container");
 const photos=[];
-const MAX_CHECK=30; // en fazla kaç fotoğraf denensin
+const MAX_CHECK=30;
+const HERO_COUNT=6;
+
+/* Lazy observer */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const img=e.target.querySelector("img");
+      if(img && img.dataset.src){
+        img.src=img.dataset.src;
+        img.onload=()=>e.target.classList.add("loaded");
+        delete img.dataset.src;
+      }
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
 
 for(let i=1;i<=MAX_CHECK;i++){
   const testImg=new Image();
@@ -136,16 +154,25 @@ for(let i=1;i<=MAX_CHECK;i++){
 
     const box=document.createElement("div");
     box.className="thumb";
+
     const img=document.createElement("img");
-    img.src=testImg.src;
-    img.onclick=()=>openLightbox(photos.indexOf(img.src));
-    img.onload=()=>box.classList.add("loaded");
+    img.onclick=()=>openLightbox(photos.indexOf(testImg.src));
+
+    if(i<=HERO_COUNT){
+      /* HERO FOTO */
+      img.src=testImg.src;
+      img.onload=()=>box.classList.add("loaded");
+    }else{
+      /* LAZY FOTO */
+      img.dataset.src=testImg.src;
+      observer.observe(box);
+    }
 
     box.appendChild(img);
     gallery.appendChild(box);
   };
 
-  testImg.onerror=()=>{}; // yoksa tamamen görmezden gel
+  testImg.onerror=()=>{};
 }
 
 /* LIGHTBOX */
