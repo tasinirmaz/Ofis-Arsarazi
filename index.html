@@ -8,7 +8,29 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
-header{background:#1a1a1a;color:#fff;padding:15px;font-size:20px;}
+header{
+  background:#1a1a1a;
+  color:#fff;
+  padding:15px;
+  font-size:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.whatsapp-header{
+  width:28px;
+  height:28px;
+  cursor:pointer;
+  animation:pulse 2s infinite;
+}
+
+/* 📱 Mobil için pulse */
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.15);}
+  100%{transform:scale(1);}
+}
 
 nav{display:flex;background:#eaeaea;border-bottom:1px solid #ccc;}
 nav button{
@@ -46,7 +68,8 @@ iframe{width:100%;height:100%;border:none;}
   overflow:hidden;
 }
 .thumb img{
-  width:100%;height:100%;
+  width:100%;
+  height:100%;
   object-fit:cover;
   cursor:pointer;
   opacity:0;
@@ -70,55 +93,31 @@ iframe{width:100%;height:100%;border:none;}
 }
 .close-btn{
   position:absolute;
-  top:15px;right:20px;
+  top:15px;
+  right:20px;
   font-size:32px;
-  color:white;cursor:pointer;
+  color:white;
+  cursor:pointer;
 }
 .counter{
   position:absolute;
   bottom:20px;
-  color:white;font-size:14px;
-}
-
-.whatsapp-btn{
-  position:fixed;
-  bottom:20px;right:20px;
-  background:#25D366;
   color:white;
-  padding:14px 18px;
-  border-radius:50px;
-  text-decoration:none;
-  font-weight:bold;
-  z-index:999;
-  display:none;
+  font-size:14px;
 }
 
-/* 📱 SADECE MOBİLDE WHATSAPP PULSE */
-@media (max-width: 768px) {
-  .wa-pulse {
-    animation: waPulse 2.2s infinite;
-  }
-
-  @keyframes waPulse {
-    0%   { transform: scale(1); }
-    50%  { 
-      transform: scale(1.18);
-      filter: drop-shadow(0 0 8px rgba(37,211,102,.8));
-    }
-    100% { transform: scale(1); }
-  }
-}
+/* alttaki whatsapp iptal */
+.whatsapp-btn{display:none;}
 </style>
 </head>
 
 <body>
 
-<header style="display:flex;align-items:center;justify-content:space-between;">
+<header>
   <div>🏠 Arsarazi Ofisi</div>
-  <img 
+  <img
     src="icons/whatsapp.png"
-    class="wa-pulse"
-    style="width:28px;height:28px;cursor:pointer"
+    class="whatsapp-header"
     onclick="document.getElementById('whatsappBtn').click()"
   >
 </header>
@@ -144,32 +143,10 @@ iframe{width:100%;height:100%;border:none;}
 <section id="bilgi">
 <div class="info-box">
 <h2>İlan Bilgileri</h2>
-
 <table class="ilan-table">
 <tr><td>İlan Adı</td><td id="ilanAdi">1.Gündoğan Mah. Seyhan Sok. No:4</td></tr>
 <tr><td>Emlak Tipi</td><td id="emlakTipi">Kiralık Daire</td></tr>
-<tr><td>Fiyatı (TL)</td><td>15.000</td></tr>
-<tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
-<tr><td>m² (Brüt)</td><td>95</td></tr>
-<tr><td>m² (Net)</td><td>85</td></tr>
-<tr><td>Oda Sayısı</td><td>2+1</td></tr>
-<tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
-<tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
-<tr><td>Kat Sayısı</td><td>4</td></tr>
-<tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
-<tr><td>Banyo Sayısı</td><td>1</td></tr>
-<tr><td>Mutfak</td><td>Kapalı</td></tr>
-<tr><td>Balkon</td><td>Var</td></tr>
-<tr><td>Asansör</td><td>Yok</td></tr>
-<tr><td>Otopark</td><td>Açık Otopark</td></tr>
-<tr><td>Eşyalı</td><td>Hayır</td></tr>
-<tr><td>Kullanım Durumu</td><td>Boş</td></tr>
-<tr><td>Site İçerisinde</td><td>Hayır</td></tr>
-<tr><td>Site Adı</td><td>Belirtilmemiş</td></tr>
-<tr><td>Aidat (TL)</td><td>200</td></tr>
-<tr><td>Depozito (TL)</td><td>15.000</td></tr>
-<tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
-<tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
+<tr><td>Fiyat</td><td>15.000 TL</td></tr>
 </table>
 </div>
 </section>
@@ -184,7 +161,7 @@ iframe{width:100%;height:100%;border:none;}
   <div id="counter" class="counter"></div>
 </div>
 
-<a id="whatsappBtn" class="whatsapp-btn" target="_blank">💬 WhatsApp</a>
+<a id="whatsappBtn" class="whatsapp-btn" target="_blank"></a>
 
 <script>
 function showSection(id){
@@ -194,16 +171,52 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
+/* 🎵 Autoplay fix */
 document.body.addEventListener("click",()=>{
   const m=document.getElementById("bgMusic");
   if(m.paused) m.play();
 },{once:true});
 
-const ilanAdi=document.getElementById("ilanAdi").innerText;
-const emlakTipi=document.getElementById("emlakTipi").innerText;
-const mesaj=`Merhaba, ${ilanAdi} ${emlakTipi} ilanınız ile ilgili bilgi almak istiyorum.`;
+/* 📲 WhatsApp */
+const mesaj="Merhaba, ilan hakkında bilgi almak istiyorum.";
 document.getElementById("whatsappBtn").href=
 `https://wa.me/905012624326?text=${encodeURIComponent(mesaj)}`;
+
+/* 🖼️ GALERİ – GARANTİLİ */
+document.addEventListener("DOMContentLoaded",()=>{
+
+const gallery=document.querySelector(".gallery-container");
+const photos=[];
+const MAX=30;
+
+for(let i=1;i<=MAX;i++){
+  const imgTest=new Image();
+  imgTest.src=`photos/${i}.jpg`;
+  imgTest.onload=()=>{
+    photos.push(imgTest.src);
+    const box=document.createElement("div");
+    box.className="thumb";
+    const img=document.createElement("img");
+    img.src=imgTest.src;
+    img.onload=()=>box.classList.add("loaded");
+    img.onclick=()=>openLightbox(photos.indexOf(imgTest.src));
+    box.appendChild(img);
+    gallery.appendChild(box);
+  };
+}
+
+let current=0;
+window.openLightbox=(i)=>{
+  current=i;
+  document.getElementById("lightbox-img").src=photos[current];
+  document.getElementById("counter").innerText=`${current+1} / ${photos.length}`;
+  document.getElementById("lightbox").style.display="flex";
+}
+window.closeLightbox=()=>{
+  document.getElementById("lightbox").style.display="none";
+}
+
+});
 </script>
 
 </body>
