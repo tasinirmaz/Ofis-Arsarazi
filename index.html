@@ -2,110 +2,52 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-
-<!-- ZOOM KİLİDİ -->
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Arsarazi Ofisi</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f5f5f5;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;}
+header{background:#1a1a1a;color:#fff;padding:15px;font-size:20px;}
+nav{display:flex;background:#eaeaea;border-bottom:1px solid #ccc;}
+nav button{flex:1;padding:12px;border:none;background:#eaeaea;cursor:pointer;}
+nav button.active{background:#fff;border-bottom:3px solid #1a1a1a;font-weight:bold;}
+section{display:none;height:calc(100vh - 115px);}
+section.active{display:block;}
+iframe{width:100%;height:100%;border:none;}
 
-/* HEADER */
-header{
-  background:#1a1a1a;
-  color:#fff;
-  padding:15px;
-  font-size:20px;
-}
+.info-box{background:#fff;padding:20px;height:100%;overflow-y:auto;}
+.ilan-table{width:100%;border-collapse:collapse;font-size:14px;}
+.ilan-table tr{border-bottom:1px solid #eee;}
+.ilan-table td{padding:10px 6px;}
+.ilan-table td:first-child{color:#666;width:45%;}
+.ilan-table td:last-child{font-weight:bold;}
 
-/* NAV */
-nav{
-  display:flex;
-  background:#eaeaea;
-  border-bottom:1px solid #ccc;
-}
-nav button{
-  flex:1;
-  padding:12px;
-  border:none;
-  background:#eaeaea;
-  cursor:pointer;
-}
-nav button.active{
-  background:#fff;
-  border-bottom:3px solid #1a1a1a;
-  font-weight:bold;
-}
-
-/* SECTIONS */
-section{
-  display:none;
-  height:calc(100vh - 115px);
-}
-section.active{ display:block; }
-
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-}
-
-/* INFO */
-.info-box{
-  background:#fff;
-  padding:20px;
-  height:100%;
-  overflow-y:auto;
-}
-
-/* İLAN TABLO */
-.ilan-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-.ilan-table tr{
-  border-bottom:1px solid #eee;
-}
-.ilan-table td{
-  padding:10px 6px;
-}
-.ilan-table td:first-child{
-  color:#666;
-  width:45%;
-}
-.ilan-table td:last-child{
-  font-weight:bold;
-}
-
-/* GALLERY */
-#galeri{
-  background:#fff;
-  padding:10px;
-  overflow-y:auto;
-}
+#galeri{background:#fff;padding:10px;overflow-y:auto;}
 .gallery-container{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
   gap:10px;
 }
-.gallery-container img{
+
+/* PLACEHOLDER */
+.thumb{
   width:100%;
+  aspect-ratio:4/3;
+  background:#ddd;
   border-radius:8px;
-  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
   transition:.3s;
 }
-.gallery-container img:hover{
-  transform:scale(1.05);
-}
+.thumb.loaded img{opacity:1;}
 
-/* LIGHTBOX */
 .lightbox{
   display:none;
   position:fixed;
@@ -120,8 +62,6 @@ iframe{
   max-height:90%;
   border-radius:10px;
 }
-
-/* CLOSE */
 .close-btn{
   position:absolute;
   top:15px;
@@ -130,16 +70,12 @@ iframe{
   color:white;
   cursor:pointer;
 }
-
-/* COUNTER */
 .counter{
   position:absolute;
   bottom:20px;
   color:white;
   font-size:14px;
 }
-
-/* WHATSAPP */
 .whatsapp-btn{
   position:fixed;
   bottom:20px;
@@ -175,36 +111,12 @@ iframe{
 
 <section id="bilgi">
   <div class="info-box">
-
     <h2>İlan Bilgileri</h2>
-
-    <!-- SADECE BURAYI DÜZENLE -->
     <table class="ilan-table">
       <tr><td>İlan No</td><td>1288960473</td></tr>
-      <tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
       <tr><td>Emlak Tipi</td><td>Kiralık Daire</td></tr>
-      <tr><td>m² (Brüt)</td><td>95</td></tr>
       <tr><td>m² (Net)</td><td>85</td></tr>
-      <tr><td>Oda Sayısı</td><td>2+1</td></tr>
-      <tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
-      <tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
-      <tr><td>Kat Sayısı</td><td>4</td></tr>
-      <tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
-      <tr><td>Banyo Sayısı</td><td>1</td></tr>
-      <tr><td>Mutfak</td><td>Kapalı</td></tr>
-      <tr><td>Balkon</td><td>Var</td></tr>
-      <tr><td>Asansör</td><td>Yok</td></tr>
-      <tr><td>Otopark</td><td>Açık Otopark</td></tr>
-      <tr><td>Eşyalı</td><td>Hayır</td></tr>
-      <tr><td>Kullanım Durumu</td><td>Boş</td></tr>
-      <tr><td>Site İçerisinde</td><td>Hayır</td></tr>
-      <tr><td>Site Adı</td><td>Belirtilmemiş</td></tr>
-      <tr><td>Aidat (TL)</td><td>200</td></tr>
-      <tr><td>Depozito (TL)</td><td>15.000</td></tr>
-      <tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
-      <tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
     </table>
-
   </div>
 </section>
 
@@ -212,16 +124,13 @@ iframe{
   <div class="gallery-container"></div>
 </section>
 
-<!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
   <div class="close-btn" onclick="closeLightbox()">✕</div>
   <img id="lightbox-img">
   <div id="counter" class="counter"></div>
 </div>
 
-<a class="whatsapp-btn" href="https://wa.me/905012624326" target="_blank">
-  💬 WhatsApp
-</a>
+<a class="whatsapp-btn" href="https://wa.me/905012624326" target="_blank">💬 WhatsApp</a>
 
 <script>
 function showSection(id){
@@ -231,24 +140,37 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* GALERİ */
+/* LAZY GALERİ */
 const gallery=document.querySelector(".gallery-container");
 const photos=[];
-let currentIndex=0;
+const total=50;
 
-for(let i=1;i<=50;i++){
-  const img=new Image();
-  img.src=`photos/${i}.jpg`;
-  img.onload=()=>{
-    photos.push(img.src);
-    const t=document.createElement("img");
-    t.src=img.src;
-    t.onclick=()=>openLightbox(photos.indexOf(img.src));
-    gallery.appendChild(t);
-  };
+for(let i=1;i<=total;i++){
+  const box=document.createElement("div");
+  box.className="thumb";
+  const img=document.createElement("img");
+  img.dataset.src=`photos/${i}.jpg`;
+  img.onclick=()=>openLightbox(i-1);
+  box.appendChild(img);
+  gallery.appendChild(box);
+  photos.push(img.dataset.src);
 }
 
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const img=e.target.querySelector("img");
+      img.src=img.dataset.src;
+      img.onload=()=>e.target.classList.add("loaded");
+      observer.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+
+document.querySelectorAll(".thumb").forEach(t=>observer.observe(t));
+
 /* LIGHTBOX */
+let currentIndex=0;
 const lightbox=document.getElementById("lightbox");
 const lightboxImg=document.getElementById("lightbox-img");
 const counter=document.getElementById("counter");
@@ -259,27 +181,16 @@ function openLightbox(i){
   counter.textContent=`${currentIndex+1} / ${photos.length}`;
   lightbox.style.display="flex";
 }
-
-function closeLightbox(){
-  lightbox.style.display="none";
-}
+function closeLightbox(){ lightbox.style.display="none"; }
 
 let startX=0;
-lightbox.addEventListener("touchstart",e=>{
-  startX=e.touches[0].screenX;
-});
+lightbox.addEventListener("touchstart",e=>startX=e.touches[0].screenX);
 lightbox.addEventListener("touchend",e=>{
-  let diff=startX-e.changedTouches[0].screenX;
-  if(Math.abs(diff)>60){
-    currentIndex=diff>0
-      ?(currentIndex+1)%photos.length
-      :(currentIndex-1+photos.length)%photos.length;
+  let d=startX-e.changedTouches[0].screenX;
+  if(Math.abs(d)>60){
+    currentIndex=d>0?(currentIndex+1)%photos.length:(currentIndex-1+photos.length)%photos.length;
     openLightbox(currentIndex);
   }
-});
-
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") closeLightbox();
 });
 </script>
 
