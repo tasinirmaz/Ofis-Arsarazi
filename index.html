@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- ZOOM KİLİDİ -->
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -12,7 +11,7 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:#f5f5f5;
 }
 
@@ -48,7 +47,7 @@ section{
   display:none;
   height:calc(100vh - 115px);
 }
-section.active{ display:block; }
+section.active{display:block}
 
 iframe{
   width:100%;
@@ -79,10 +78,7 @@ iframe{
   width:100%;
   border-radius:8px;
   cursor:pointer;
-  transition:.3s;
-}
-.gallery-container img:hover{
-  transform:scale(1.05);
+  content-visibility:auto;
 }
 
 /* LIGHTBOX */
@@ -94,16 +90,13 @@ iframe{
   justify-content:center;
   align-items:center;
   z-index:9999;
-  touch-action:pan-y;
-  overscroll-behavior:contain;
+  will-change:transform;
 }
 .lightbox img{
   max-width:90%;
   max-height:90%;
   border-radius:10px;
   user-select:none;
-  -webkit-user-drag:none;
-  touch-action:pan-y;
 }
 
 /* CLOSE */
@@ -122,7 +115,6 @@ iframe{
   bottom:20px;
   color:white;
   font-size:14px;
-  opacity:.9;
 }
 
 /* WHATSAPP */
@@ -152,11 +144,13 @@ iframe{
 </nav>
 
 <section id="tur" class="active">
-  <iframe src="tour/index.html"></iframe>
+  <iframe src="tour/index.html" loading="lazy"></iframe>
 </section>
 
 <section id="plan">
-  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
+  <iframe loading="lazy"
+    src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e">
+  </iframe>
 </section>
 
 <section id="bilgi">
@@ -174,7 +168,7 @@ iframe{
 </section>
 
 <section id="galeri">
-  <div class="gallery-container"></div>
+  <div class="gallery-container" id="gallery"></div>
 </section>
 
 <!-- LIGHTBOX -->
@@ -189,6 +183,14 @@ iframe{
 </a>
 
 <script>
+const gallery=document.getElementById("gallery");
+const lightbox=document.getElementById("lightbox");
+const lightboxImg=document.getElementById("lightbox-img");
+const counter=document.getElementById("counter");
+let photos=[];
+let currentIndex=0;
+
+/* TAB */
 function showSection(id){
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
@@ -196,65 +198,49 @@ function showSection(id){
   document.getElementById(id).classList.add("active");
 }
 
-/* GALERİ */
-const gallery = document.querySelector(".gallery-container");
-let photos = [];
-let currentIndex = 0;
-
+/* GALERİ – LAZY */
 for(let i=1;i<=50;i++){
-  const img = new Image();
-  img.src = `photos/${i}.jpg`;
-  img.onload = ()=>{
-    photos.push(img.src);
-    const t = document.createElement("img");
-    t.src = img.src;
-    t.onclick = ()=>openLightbox(photos.indexOf(img.src));
-    gallery.appendChild(t);
-  };
+  const thumb=document.createElement("img");
+  thumb.loading="lazy";
+  thumb.src=`photos/${i}.jpg`;
+  thumb.onclick=()=>openLightbox(i-1);
+  gallery.appendChild(thumb);
+  photos.push(`photos/${i}.jpg`);
 }
 
 /* LIGHTBOX */
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-const counter = document.getElementById("counter");
-
-function updateCounter(){
-  counter.textContent = `${currentIndex+1} / ${photos.length}`;
-}
-
 function openLightbox(i){
   currentIndex=i;
-  lightboxImg.src=photos[currentIndex];
-  updateCounter();
+  document.body.style.overflow="hidden";
+  updateLightbox();
   lightbox.style.display="flex";
 }
 
 function closeLightbox(){
+  document.body.style.overflow="";
   lightbox.style.display="none";
 }
 
-/* SWIPE — SADECE TEK PARMAK */
-let startX=0;
-let singleTouch=false;
+function updateLightbox(){
+  requestAnimationFrame(()=>{
+    lightboxImg.src=photos[currentIndex];
+    counter.textContent=`${currentIndex+1} / ${photos.length}`;
+  });
+}
 
+/* SWIPE */
+let startX=0;
 lightbox.addEventListener("touchstart",e=>{
-  if(e.touches.length===1){
-    startX=e.touches[0].screenX;
-    singleTouch=true;
-  }else{
-    singleTouch=false;
-  }
-});
+  startX=e.touches[0].clientX;
+},{passive:true});
 
 lightbox.addEventListener("touchend",e=>{
-  if(!singleTouch) return;
-  let diff=startX-e.changedTouches[0].screenX;
+  let diff=startX-e.changedTouches[0].clientX;
   if(Math.abs(diff)>60){
-    currentIndex = diff>0
-      ? (currentIndex+1)%photos.length
-      : (currentIndex-1+photos.length)%photos.length;
-    lightboxImg.src=photos[currentIndex];
-    updateCounter();
+    currentIndex=diff>0
+      ?(currentIndex+1)%photos.length
+      :(currentIndex-1+photos.length)%photos.length;
+    updateLightbox();
   }
 });
 
