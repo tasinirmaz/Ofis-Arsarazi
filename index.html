@@ -2,10 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Arsarazi Ofisi</title>
 
 <style>
@@ -63,6 +61,28 @@ iframe{
   overflow-y:auto;
 }
 
+/* İLAN TABLO */
+.ilan-table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+.ilan-table tr{
+  border-bottom:1px solid #eee;
+}
+.ilan-table td{
+  padding:10px 6px;
+  vertical-align:top;
+}
+.ilan-table td:first-child{
+  color:#666;
+  width:45%;
+}
+.ilan-table td:last-child{
+  font-weight:bold;
+  color:#111;
+}
+
 /* GALLERY */
 #galeri{
   background:#fff;
@@ -78,7 +98,6 @@ iframe{
   width:100%;
   border-radius:8px;
   cursor:pointer;
-  content-visibility:auto;
 }
 
 /* LIGHTBOX */
@@ -90,13 +109,11 @@ iframe{
   justify-content:center;
   align-items:center;
   z-index:9999;
-  will-change:transform;
 }
 .lightbox img{
   max-width:90%;
   max-height:90%;
   border-radius:10px;
-  user-select:none;
 }
 
 /* CLOSE */
@@ -144,34 +161,53 @@ iframe{
 </nav>
 
 <section id="tur" class="active">
-  <iframe src="tour/index.html" loading="lazy"></iframe>
+  <iframe src="tour/index.html"></iframe>
 </section>
 
 <section id="plan">
-  <iframe loading="lazy"
-    src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e">
-  </iframe>
+  <iframe src="https://planner5d.com/view?key=37ed73ce9dc1571cf583cd6be3adbd5e"></iframe>
 </section>
 
 <section id="bilgi">
   <div class="info-box">
-    <h2>Gayrimenkul Bilgileri</h2>
-    <p><b>İlan Sahibi:</b> Arsarazi</p>
-    <p><b>Konum:</b> Balıkesir / Paşaalanı</p>
-    <p><b>Oda:</b> 3+1</p>
-    <p><b>Alan:</b> 120 m²</p>
 
-    <h3>İletişim</h3>
-    <p>📞 0501 262 43 26</p>
-    <p>📧 keskinrecep26@gmail.com</p>
+    <h2>İlan Bilgileri</h2>
+
+    <!-- İLAN BİLGİLERİ BAŞLANGIÇ -->
+    <table class="ilan-table">
+      <tr><td>İlan No</td><td>1288960473</td></tr>
+      <tr><td>İlan Tarihi</td><td>15 Aralık 2025</td></tr>
+      <tr><td>Emlak Tipi</td><td>Kiralık Daire</td></tr>
+      <tr><td>m² (Brüt)</td><td>95</td></tr>
+      <tr><td>m² (Net)</td><td>85</td></tr>
+      <tr><td>Oda Sayısı</td><td>2+1</td></tr>
+      <tr><td>Bina Yaşı</td><td>26-30 arası</td></tr>
+      <tr><td>Bulunduğu Kat</td><td>Giriş Katı</td></tr>
+      <tr><td>Kat Sayısı</td><td>4</td></tr>
+      <tr><td>Isıtma</td><td>Kombi (Doğalgaz)</td></tr>
+      <tr><td>Banyo Sayısı</td><td>1</td></tr>
+      <tr><td>Mutfak</td><td>Kapalı</td></tr>
+      <tr><td>Balkon</td><td>Var</td></tr>
+      <tr><td>Asansör</td><td>Yok</td></tr>
+      <tr><td>Otopark</td><td>Açık Otopark</td></tr>
+      <tr><td>Eşyalı</td><td>Hayır</td></tr>
+      <tr><td>Kullanım Durumu</td><td>Boş</td></tr>
+      <tr><td>Site İçerisinde</td><td>Hayır</td></tr>
+      <tr><td>Site Adı</td><td>Belirtilmemiş</td></tr>
+      <tr><td>Aidat (TL)</td><td>200</td></tr>
+      <tr><td>Depozito (TL)</td><td>15.000</td></tr>
+      <tr><td>Tapu Durumu</td><td>Kat Mülkiyetli</td></tr>
+      <tr><td>Kimden</td><td>Emlak Ofisinden</td></tr>
+    </table>
+    <!-- İLAN BİLGİLERİ BİTİŞ -->
+
   </div>
 </section>
 
 <section id="galeri">
-  <div class="gallery-container" id="gallery"></div>
+  <div class="gallery-container"></div>
 </section>
 
-<!-- LIGHTBOX -->
 <div id="lightbox" class="lightbox">
   <div class="close-btn" onclick="closeLightbox()">✕</div>
   <img id="lightbox-img">
@@ -183,71 +219,12 @@ iframe{
 </a>
 
 <script>
-const gallery=document.getElementById("gallery");
-const lightbox=document.getElementById("lightbox");
-const lightboxImg=document.getElementById("lightbox-img");
-const counter=document.getElementById("counter");
-let photos=[];
-let currentIndex=0;
-
-/* TAB */
 function showSection(id){
   document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
   document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
   document.querySelector(`nav button[data-target="${id}"]`).classList.add("active");
   document.getElementById(id).classList.add("active");
 }
-
-/* GALERİ – LAZY */
-for(let i=1;i<=50;i++){
-  const thumb=document.createElement("img");
-  thumb.loading="lazy";
-  thumb.src=`photos/${i}.jpg`;
-  thumb.onclick=()=>openLightbox(i-1);
-  gallery.appendChild(thumb);
-  photos.push(`photos/${i}.jpg`);
-}
-
-/* LIGHTBOX */
-function openLightbox(i){
-  currentIndex=i;
-  document.body.style.overflow="hidden";
-  updateLightbox();
-  lightbox.style.display="flex";
-}
-
-function closeLightbox(){
-  document.body.style.overflow="";
-  lightbox.style.display="none";
-}
-
-function updateLightbox(){
-  requestAnimationFrame(()=>{
-    lightboxImg.src=photos[currentIndex];
-    counter.textContent=`${currentIndex+1} / ${photos.length}`;
-  });
-}
-
-/* SWIPE */
-let startX=0;
-lightbox.addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-},{passive:true});
-
-lightbox.addEventListener("touchend",e=>{
-  let diff=startX-e.changedTouches[0].clientX;
-  if(Math.abs(diff)>60){
-    currentIndex=diff>0
-      ?(currentIndex+1)%photos.length
-      :(currentIndex-1+photos.length)%photos.length;
-    updateLightbox();
-  }
-});
-
-/* ESC */
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape") closeLightbox();
-});
 </script>
 
 </body>
